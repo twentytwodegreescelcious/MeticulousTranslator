@@ -6,6 +6,10 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * Created by twentytwodegreescelcious on 28.12.2018.
+ */
+
 public class HttpClient {
 
     public static final Client CLIENT = ClientBuilder.newClient();

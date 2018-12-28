@@ -5,6 +5,10 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net.HttpCli
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Created by twentytwodegreescelcious on 28.12.2018.
+ */
+
 public class GoogleTranslatorService {
 
     public static final String TRANSLATOR_RESOURCE = "https://translation.googleapis.com";

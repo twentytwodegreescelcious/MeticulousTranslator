@@ -1,10 +1,13 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core;
 
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Message;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Updates;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.Translation;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.TranslatorService;
+
+/**
+ * Created by twentytwodegreescelcious on 28.12.2018.
+ */
 
 import java.util.List;
 
@@ -14,7 +17,7 @@ public class UpdateHandlerImpl implements UpdateHandler{
 
     @Override
     public void onUpdate(Updates updates) {
-        Message message = updates.getResult().get(updates.getResult().size()-1).getMessage();
+        Message message = updates.getResults().get(updates.getResults().size()-1).getMessage();
         int chatId = message.getChat().getId();
         String translated = message.getText();
 

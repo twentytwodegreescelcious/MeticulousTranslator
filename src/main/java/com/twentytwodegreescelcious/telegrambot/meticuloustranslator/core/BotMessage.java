@@ -2,6 +2,10 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core;
 
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net.HttpClient;
 
+/**
+ * Created by twentytwodegreescelcious on 28.12.2018.
+ */
+
 public class BotMessage {
 
     public static final String TELEGRAM_RESOURCE =

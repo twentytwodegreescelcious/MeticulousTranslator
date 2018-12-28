@@ -1,23 +1,33 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain;
 
-public class Chat {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Created by twentytwodegreescelcious on 28.12.2018.
+ */
+
+public class Chat {
+    @JsonProperty(value="id")
     private int id;
-    private String first_name;
-    private String last_name;
+    @JsonProperty(value = "first_name")
+    private String firstName;
+    @JsonProperty(value = "last_name")
+    private String lastName;
+    @JsonProperty(value = "username")
     private String username;
+    @JsonProperty(value = "type")
     private String type;
 
     public int getId() {
         return id;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getLast_name() {
-        return last_name;
+    public String getLastName() {
+        return lastName;
     }
 
     public String getUsername() {

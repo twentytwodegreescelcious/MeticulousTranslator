@@ -6,6 +6,10 @@ import org.glassfish.jersey.internal.inject.AbstractBinder;
 
 import javax.inject.Singleton;
 
+/**
+ * Created by twentytwodegreescelcious on 28.12.2018.
+ */
+
 public class DependencyBinder extends AbstractBinder {
 
     @Override

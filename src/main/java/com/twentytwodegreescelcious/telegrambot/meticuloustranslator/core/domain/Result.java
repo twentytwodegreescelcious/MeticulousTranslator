@@ -1,12 +1,20 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+/**
+ * Created by twentytwodegreescelcious on 28.12.2018.
+ */
+
 public class Result {
 
-    private int update_id;
+    @JsonProperty(value = "update_id")
+    private int updateId;
+    @JsonProperty(value = "message")
     private Message message;
 
-    public int getUpdate_id() {
-        return update_id;
+    public int getUpdateId() {
+        return updateId;
     }
 
     public Message getMessage() {
