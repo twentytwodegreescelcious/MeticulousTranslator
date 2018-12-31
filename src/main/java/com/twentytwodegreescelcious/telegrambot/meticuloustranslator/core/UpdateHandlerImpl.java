@@ -1,5 +1,9 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Message;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Updates;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.Translation;
@@ -13,6 +17,7 @@ import java.util.List;
 
 public class UpdateHandlerImpl implements UpdateHandler{
 
+    private final static String ENDPOINT = "https://api.telegram.org/";
     private TranslatorService translatorService = new TranslatorService();
 
     @Override
@@ -28,4 +33,20 @@ public class UpdateHandlerImpl implements UpdateHandler{
             new BotMessage(chatId, "No translation found for " + translated).send();
         }
     }
+
+    @Override
+    public HttpResponse<JsonNode> sendMessage(String token, Integer chatId, String text) throws UnirestException {
+        return Unirest.post(ENDPOINT + token + "/sendMessage")
+                .field("chat_id", chatId)
+                .field("text", text)
+                .asJson();
+    }
+
+    @Override
+    public HttpResponse<JsonNode> getUpdates(String token, Long offset) throws UnirestException {
+        return Unirest.post(ENDPOINT + token + "/getUpdates")
+                .field("offset", offset)
+                .asJson();
+    }
+
 }
