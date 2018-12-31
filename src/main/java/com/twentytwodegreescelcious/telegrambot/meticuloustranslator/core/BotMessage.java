@@ -8,7 +8,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net.HttpCli
 
 public class BotMessage {
 
-    public static final String TELEGRAM_RESOURCE =
+    private static final String TELEGRAM_RESOURCE =
             "https://api.telegram.org/bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk";
 
     private final int chat_id;

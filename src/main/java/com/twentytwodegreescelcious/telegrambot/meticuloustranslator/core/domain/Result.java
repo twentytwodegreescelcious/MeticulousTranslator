@@ -20,4 +20,12 @@ public class Result {
     public Message getMessage() {
         return message;
     }
+
+    public void setUpdateId(int updateId) {
+        this.updateId = updateId;
+    }
+
+    public void setMessage(Message message) {
+        this.message = message;
+    }
 }

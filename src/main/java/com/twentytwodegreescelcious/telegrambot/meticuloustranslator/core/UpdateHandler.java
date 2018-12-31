@@ -12,7 +12,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 public interface UpdateHandler {
 
     void onUpdate(Updates result);
-    HttpResponse<JsonNode> sendMessage(String token, Integer chatId, String text) throws UnirestException;
-    HttpResponse<JsonNode> getUpdates(String token, Long offset) throws UnirestException;
+    void sendMessage(Integer chatId, String text);
+    HttpResponse<JsonNode> getUpdates(String token, int offset) throws UnirestException;
 
 }

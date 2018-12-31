@@ -1,17 +1,18 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator;
 
 
-
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandler;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandlerImpl;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by twentytwodegreescelcious on 12/28/2018.
@@ -28,12 +29,13 @@ public class MeticulousTranslator {
     }
 
     public void run() throws UnirestException {
-        long last_update_id = 0L; // last processed command
+        int last_update_id = 0; // last processed command
         HttpResponse<JsonNode> response;
         while (true) {
             response = updateHandler.getUpdates(this.token, last_update_id++);
             if (response.getStatus() == 200) {
                 JSONArray responses =   response.getBody().getObject().getJSONArray("result");
+                List<Result> results = new ArrayList();
                 if (responses.isNull(0)) continue;
                 else last_update_id = responses
                         .getJSONObject(responses.length() - 1)
@@ -54,12 +56,12 @@ public class MeticulousTranslator {
                         String reply = "Hi, this is an example bot\n" +
                                 "Your chat_id is " + chat_id + "\n" +
                                 "Your username is " + username;
-                        updateHandler.sendMessage(this.token, chat_id, reply);
+                        updateHandler.sendMessage(chat_id, reply);
                     } else if (text.contains("/echo")) {
-                        updateHandler.sendMessage(this.token, chat_id, "Received " + text);
+                        updateHandler.sendMessage(chat_id, "Received " + text);
                     } else if (text.contains("/toupper")) {
                         String param = text.substring("/toupper".length(), text.length());
-                        updateHandler.sendMessage(this.token, chat_id, param.toUpperCase());
+                        updateHandler.sendMessage(chat_id, param.toUpperCase());
                     }
                 }
             }

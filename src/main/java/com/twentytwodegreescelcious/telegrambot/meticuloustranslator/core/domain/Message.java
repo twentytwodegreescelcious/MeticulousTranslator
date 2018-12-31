@@ -40,4 +40,24 @@ public class Message {
     public String getText() {
         return text;
     }
+
+    public void setMessageId(int messageId) {
+        this.messageId = messageId;
+    }
+
+    public void setFrom(From from) {
+        this.from = from;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
 }

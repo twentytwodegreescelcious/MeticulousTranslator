@@ -44,4 +44,28 @@ public class From {
     public String getLanguageCode() {
         return languageCode;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setBot(boolean bot) {
+        isBot = bot;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setLanguageCode(String languageCode) {
+        this.languageCode = languageCode;
+    }
 }

@@ -35,15 +35,12 @@ public class UpdateHandlerImpl implements UpdateHandler{
     }
 
     @Override
-    public HttpResponse<JsonNode> sendMessage(String token, Integer chatId, String text) throws UnirestException {
-        return Unirest.post(ENDPOINT + token + "/sendMessage")
-                .field("chat_id", chatId)
-                .field("text", text)
-                .asJson();
+    public void sendMessage(Integer chatId, String text) {
+        new BotMessage(chatId, text).send();
     }
 
     @Override
-    public HttpResponse<JsonNode> getUpdates(String token, Long offset) throws UnirestException {
+    public HttpResponse<JsonNode> getUpdates(String token, int offset) throws UnirestException {
         return Unirest.post(ENDPOINT + token + "/getUpdates")
                 .field("offset", offset)
                 .asJson();
