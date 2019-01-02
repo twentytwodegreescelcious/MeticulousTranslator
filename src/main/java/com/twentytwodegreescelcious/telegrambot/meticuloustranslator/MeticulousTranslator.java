@@ -7,11 +7,14 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandler;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandlerImpl;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.ResultJsonConvertionService;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.ResultJsonConvertionServiceImpl;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -19,7 +22,9 @@ import java.util.List;
  */
 public class MeticulousTranslator {
 
-    private  final String token;
+    private final String token;
+
+    private ResultJsonConvertionService jsonConverter = new ResultJsonConvertionServiceImpl();
 
     @Inject
     private UpdateHandler updateHandler = new UpdateHandlerImpl();
@@ -29,39 +34,25 @@ public class MeticulousTranslator {
     }
 
     public void run() throws UnirestException {
-        int last_update_id = 0; // last processed command
+        int lastUpdateId = 0;
         HttpResponse<JsonNode> response;
         while (true) {
-            response = updateHandler.getUpdates(this.token, last_update_id++);
+            response = updateHandler.getUpdates(this.token, lastUpdateId++);
             if (response.getStatus() == 200) {
-                JSONArray responses =   response.getBody().getObject().getJSONArray("result");
-                List<Result> results = new ArrayList();
-                if (responses.isNull(0)) continue;
-                else last_update_id = responses
-                        .getJSONObject(responses.length() - 1)
-                        .getInt("update_id") + 1;
-                for (int i = 0; i < responses.length(); i++) {
-                    JSONObject message = responses
-                            .getJSONObject(i)
-                            .getJSONObject("message");
-                    int chat_id = message
-                            .getJSONObject("chat")
-                            .getInt("id");
-                    String username = message
-                            .getJSONObject("chat")
-                            .getString("username");
-                    String text = message
-                            .getString("text");
-                    if (text.contains("/start")) {
-                        String reply = "Hi, this is an example bot\n" +
-                                "Your chat_id is " + chat_id + "\n" +
-                                "Your username is " + username;
-                        updateHandler.sendMessage(chat_id, reply);
-                    } else if (text.contains("/echo")) {
-                        updateHandler.sendMessage(chat_id, "Received " + text);
-                    } else if (text.contains("/toupper")) {
-                        String param = text.substring("/toupper".length(), text.length());
-                        updateHandler.sendMessage(chat_id, param.toUpperCase());
+                JSONArray responses = response.getBody().getObject().getJSONArray("result");
+                List<Result> results = jsonConverter.resultsAsList(responses);
+                if (results.equals(Collections.emptyList())) {
+                    continue;
+                } else {
+                    lastUpdateId = (results.get(results.size() - 1).getUpdateId()) + 1;
+                }
+                for (int i = 0; i < results.size(); i++) {
+                    String text = results.get(i).getMessage().getText();
+                    int chatId = results.get(i).getMessage().getChat().getId();
+                    String username = results.get(i).getMessage().getFrom().getUsername();
+                    if (text.contains("/greet")) {
+                        updateHandler.sendMessage(chatId, "Greetings to you, " +
+                                username);
                     }
                 }
             }
