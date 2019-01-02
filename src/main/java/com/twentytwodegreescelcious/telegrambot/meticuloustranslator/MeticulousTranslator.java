@@ -4,16 +4,19 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.BotMessage;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandler;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandlerImpl;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.BotCommand;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.Invoker;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.BotCommandExecutor;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.GreetingsCommand;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.ResultJsonConvertionService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.ResultJsonConvertionServiceImpl;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +28,8 @@ public class MeticulousTranslator {
     private final String token;
 
     private ResultJsonConvertionService jsonConverter = new ResultJsonConvertionServiceImpl();
+
+    private Invoker invoker = new BotCommandExecutor();
 
     @Inject
     private UpdateHandler updateHandler = new UpdateHandlerImpl();
@@ -51,8 +56,8 @@ public class MeticulousTranslator {
                     int chatId = results.get(i).getMessage().getChat().getId();
                     String username = results.get(i).getMessage().getFrom().getUsername();
                     if (text.contains("/greet")) {
-                        updateHandler.sendMessage(chatId, "Greetings to you, " +
-                                username);
+                        invoker.executeCommand(new GreetingsCommand(chatId, "Greetings to you, " +
+                                username));
                     }
                 }
             }

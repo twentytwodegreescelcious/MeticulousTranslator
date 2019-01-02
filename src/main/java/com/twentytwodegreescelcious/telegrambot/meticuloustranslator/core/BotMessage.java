@@ -11,16 +11,16 @@ public class BotMessage {
     private static final String TELEGRAM_RESOURCE =
             "https://api.telegram.org/bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk";
 
-    private final int chat_id;
+    private final int chatId;
     private final String text;
 
-    public BotMessage(int chat_id, String text) {
-        this.chat_id = chat_id;
+    public BotMessage(int chatId, String text) {
+        this.chatId = chatId;
         this.text = text;
     }
 
-    public int getChat_id() {
-        return chat_id;
+    public int getChatId() {
+        return chatId;
     }
 
     public String getText() {
