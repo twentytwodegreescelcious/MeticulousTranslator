@@ -1,6 +1,10 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator;
 
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -12,11 +16,15 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.Invoker;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.BotCommandExecutor;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.GreetingsCommand;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.StartCommand;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.ResultJsonConvertionService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.ResultJsonConvertionServiceImpl;
 import org.json.JSONArray;
 
 import javax.inject.Inject;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,7 +53,18 @@ public class MeticulousTranslator {
             response = updateHandler.getUpdates(this.token, lastUpdateId++);
             if (response.getStatus() == 200) {
                 JSONArray responses = response.getBody().getObject().getJSONArray("result");
-                List<Result> results = jsonConverter.resultsAsList(responses);
+//                List<Result> results = jsonConverter.resultsAsList(responses);
+                List<Result> results = new ArrayList<>();
+                try {
+                    results = new ObjectMapper().readValue(responses.toString(), new TypeReference<List<Result>>() {
+                    });
+                } catch (JsonParseException exc) {
+                    System.err.println(exc);
+                } catch (JsonMappingException exc) {
+                    System.err.println(exc);
+                } catch (IOException exc) {
+                    System.err.println(exc);
+                }
                 if (results.equals(Collections.emptyList())) {
                     continue;
                 } else {
@@ -58,6 +77,8 @@ public class MeticulousTranslator {
                     if (text.contains("/greet")) {
                         invoker.executeCommand(new GreetingsCommand(chatId, "Greetings to you, " +
                                 username));
+                    } else if (text.contains("/start")) {
+                        invoker.executeCommand(new StartCommand(chatId));
                     }
                 }
             }

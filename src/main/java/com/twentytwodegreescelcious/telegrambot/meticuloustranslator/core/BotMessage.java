@@ -1,5 +1,6 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net.HttpClient;
 
 /**
@@ -11,11 +12,12 @@ public class BotMessage {
     private static final String TELEGRAM_RESOURCE =
             "https://api.telegram.org/bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk";
 
+    @JsonProperty(value = "chat_id")
     private final int chatId;
     private final String text;
 
-    public BotMessage(int chatId, String text) {
-        this.chatId = chatId;
+    public BotMessage(int chat_id, String text) {
+        this.chatId = chat_id;
         this.text = text;
     }
 

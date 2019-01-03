@@ -22,7 +22,7 @@ public class HttpClient {
 
     public static Response POST(String url, Object data) {
         Response res = CLIENT.target(url)
-                .request(MediaType.APPLICATION_JSON_PATCH_JSON_TYPE)
+                .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(data, MediaType.APPLICATION_JSON_TYPE));
         res.readEntity(Object.class);
         System.out.println(res.getStatus());

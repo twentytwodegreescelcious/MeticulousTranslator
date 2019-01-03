@@ -1,5 +1,6 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -13,10 +14,13 @@ public class From {
     @JsonProperty(value = "is_bot")
     private boolean isBot;
     @JsonProperty(value="first_name")
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String firstName;
     @JsonProperty(value="last_name")
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String lastName;
     @JsonProperty(value = "username")
+    @JsonIgnoreProperties(ignoreUnknown = true)
     private String username;
     @JsonProperty(value = "language_code")
     private String languageCode;

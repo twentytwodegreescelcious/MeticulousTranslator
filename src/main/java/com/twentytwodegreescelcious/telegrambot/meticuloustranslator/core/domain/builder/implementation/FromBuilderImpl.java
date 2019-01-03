@@ -39,19 +39,25 @@ public class FromBuilderImpl implements FromBuilder {
 
     @Override
     public FromBuilder setFirstName(String firstName) {
-        this.from.setFirstName(firstName);
+        if (firstName != null) {
+            this.from.setFirstName(firstName);
+        }
         return this;
     }
 
     @Override
     public FromBuilder setLastName(String lastName) {
-        this.from.setLastName(lastName);
+        if (lastName != null) {
+            this.from.setLastName(lastName);
+        }
         return this;
     }
 
     @Override
     public FromBuilder setUsername(String username) {
-        this.from.setUsername(username);
+        if (username != null) {
+            this.from.setUsername(username);
+        }
         return this;
     }
 

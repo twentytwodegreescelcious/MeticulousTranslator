@@ -1,5 +1,6 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
@@ -20,6 +21,9 @@ public class Message {
     private Date date;
     @JsonProperty(value = "text")
     private String text;
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    @JsonProperty(value = "entities")
+    private Object entities;
 
     public int getMessageId() {
         return messageId;

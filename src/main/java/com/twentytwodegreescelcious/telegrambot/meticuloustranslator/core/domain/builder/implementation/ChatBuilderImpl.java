@@ -33,19 +33,25 @@ public class ChatBuilderImpl implements ChatBuilder {
 
     @Override
     public ChatBuilder setFirstName(String firstName) {
-        this.chat.setFirstName(firstName);
+        if (firstName != null) {
+            this.chat.setFirstName(firstName);
+        }
         return this;
     }
 
     @Override
     public ChatBuilder setLastName(String lastName) {
-        this.chat.setLastName(lastName);
+        if (lastName != null) {
+            this.chat.setLastName(lastName);
+        }
         return this;
     }
 
     @Override
     public ChatBuilder setUsername(String username) {
-        this.chat.setUsername(username);
+        if (username != null) {
+            this.chat.setUsername(username);
+        }
         return this;
     }
 
