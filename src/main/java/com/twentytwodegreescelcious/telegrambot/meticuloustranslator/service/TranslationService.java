@@ -7,5 +7,5 @@ import java.net.MalformedURLException;
  * Created by twentytwodegreescelcious on 1/8/2019.
  */
 public interface TranslationService {
-    String translate(String query) throws IOException;
+    String translate(String query, String defaultLanguage) throws IOException;
 }

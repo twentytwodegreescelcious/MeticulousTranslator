@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -16,19 +15,20 @@ import java.net.URLEncoder;
  */
 public class TranslationServiceImpl implements TranslationService {
 
-    private String fromLanguage;
+    private String sourceLanguage;
     private String targetLanguage;
     private String word ="";
 
     @Override
-    public String translate(String query) throws IOException {
-        parseQuery(query);
+    public String translate(String query, String defaultLanguage) throws IOException {
+        sourceLanguage = "auto";
+        targetLanguage = defaultLanguage;
+        parseQuery(query, 1);
         String url = "https://translate.googleapis.com/translate_a/single?" +
                 "client=gtx&" +
-                "sl=" + fromLanguage +
+                "sl=" + sourceLanguage +
                 "&tl=" + targetLanguage +
                 "&dt=t&q=" + URLEncoder.encode(word, "UTF-8");
-
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestProperty("User-Agent", "Mozilla/5.0");
@@ -37,7 +37,6 @@ public class TranslationServiceImpl implements TranslationService {
                 new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
-        System.out.println();
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
         }
@@ -46,17 +45,21 @@ public class TranslationServiceImpl implements TranslationService {
         return parseResult(response.toString());
     }
 
-    private void parseQuery(String query) {
+    private void parseQuery(String query, int wordPosition) {
         /*
         Query example: /translate en ru Hello
-        fromLanguage: en
+        sourceLanguage: en
         targetLanguage: ru
         word: Hello
          */
         String[] arr = query.split(" ");
-        fromLanguage = arr[1];
-        targetLanguage = arr[2];
-        for (int i=3; i< arr.length; i++) {
+        if (sourceLanguage == null) {
+            sourceLanguage = arr[1];
+        }
+        if (targetLanguage == null) {
+            targetLanguage = arr[2];
+        }
+        for (int i=wordPosition; i< arr.length; i++) {
             word += " " + arr[i];
         }
     }

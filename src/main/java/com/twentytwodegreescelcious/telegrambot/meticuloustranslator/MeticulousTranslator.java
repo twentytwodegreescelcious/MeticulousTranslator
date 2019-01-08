@@ -71,6 +71,7 @@ public class MeticulousTranslator {
                     String text = results.get(i).getMessage().getText();
                     int chatId = results.get(i).getMessage().getChat().getId();
                     String username = results.get(i).getMessage().getFrom().getUsername();
+                    String defaultLanguage = results.get(i).getMessage().getFrom().getLanguageCode();
                     if (text.contains("/greet")) {
                         invoker.executeCommand(new GreetingsCommand(chatId, "Greetings to you, " +
                                 username));
@@ -78,7 +79,7 @@ public class MeticulousTranslator {
                         invoker.executeCommand(new StartCommand(chatId));
                     } else if (text.contains("/translate")) {
                         try {
-                            invoker.executeCommand(new TranslateCommand(chatId, new TranslationServiceImpl().translate(text)));
+                            invoker.executeCommand(new TranslateCommand(chatId, new TranslationServiceImpl().translate(text, defaultLanguage.substring(0,1))));
                         } catch (IOException exc) {
                             System.err.println(exc);
                         }
