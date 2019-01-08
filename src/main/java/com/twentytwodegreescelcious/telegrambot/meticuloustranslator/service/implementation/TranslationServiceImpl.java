@@ -37,7 +37,7 @@ public class TranslationServiceImpl implements TranslationService {
                 new InputStreamReader(con.getInputStream()));
         String inputLine;
         StringBuffer response = new StringBuffer();
-
+        System.out.println();
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
         }
