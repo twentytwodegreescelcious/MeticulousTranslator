@@ -1,9 +1,7 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator;
 
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -16,10 +14,10 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.GreetingsCommand;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.StartCommand;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.TranslateCommand;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.ResultJsonConvertionService;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.ResultJsonConvertionServiceImpl;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.TranslationServiceImpl;
 import org.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -30,13 +28,13 @@ import java.util.List;
 /**
  * Created by twentytwodegreescelcious on 12/28/2018.
  */
+
 public class MeticulousTranslator {
 
     private final String token;
 
-    private ResultJsonConvertionService jsonConverter = new ResultJsonConvertionServiceImpl();
-
     private Invoker invoker = new BotCommandExecutor();
+    private static Logger logger = LoggerFactory.getLogger(MeticulousTranslator.class);
 
     @Inject
     private UpdateHandler updateHandler = new UpdateHandlerImpl();
@@ -45,7 +43,7 @@ public class MeticulousTranslator {
         this.token = token;
     }
 
-    public void run() throws UnirestException {
+    public void run() throws UnirestException, InterruptedException {
         int lastUpdateId = 0;
         HttpResponse<JsonNode> response;
         while (true) {
@@ -55,12 +53,8 @@ public class MeticulousTranslator {
                 List<Result> results = new ArrayList<>();
                 try {
                     results = new ObjectMapper().readValue(responses.toString(), new TypeReference<List<Result>>(){});
-                } catch (JsonParseException exc) {
-                    System.err.println(exc);
-                } catch (JsonMappingException exc) {
-                    System.err.println(exc);
                 } catch (IOException exc) {
-                    System.err.println(exc);
+                    logger.error("Error while parsing JSON", exc);
                 }
                 if (results.equals(Collections.emptyList())) {
                     continue;
@@ -72,19 +66,24 @@ public class MeticulousTranslator {
                     int chatId = results.get(i).getMessage().getChat().getId();
                     String username = results.get(i).getMessage().getFrom().getUsername();
                     String defaultLanguage = results.get(i).getMessage().getFrom().getLanguageCode();
-                    if (text.contains("/greet")) {
-                        invoker.executeCommand(new GreetingsCommand(chatId, "Greetings to you, " +
-                                username));
-                    } else if (text.contains("/start")) {
-                        invoker.executeCommand(new StartCommand(chatId));
-                    } else if (text.contains("/translate")) {
-                        try {
-                            invoker.executeCommand(new TranslateCommand(chatId, new TranslationServiceImpl().translate(text, defaultLanguage.substring(0,1))));
-                        } catch (IOException exc) {
-                            System.err.println(exc);
-                        }
-                    }
+                    parseAndExecuteCommand(text, chatId, username, defaultLanguage);
                 }
+            }
+            Thread.sleep(200);
+        }
+    }
+
+    private void parseAndExecuteCommand(String text, int chatId, String username, String defaultLanguage) {
+        if (text.contains("/greet")) {
+            invoker.executeCommand(new GreetingsCommand(chatId, "Greetings to you, " +
+                    username)); // commandDao.greet(chatId, text);
+        } else if (text.contains("/start")) {
+            invoker.executeCommand(new StartCommand(chatId));
+        } else if (text.contains("/translate")) {
+            try {
+                invoker.executeCommand(new TranslateCommand(chatId, new TranslationServiceImpl().translate(text, defaultLanguage.substring(0,1))));
+            } catch (IOException exc) {
+                logger.error("Error while translating", exc);
             }
         }
     }
@@ -93,7 +92,10 @@ public class MeticulousTranslator {
         try {
             new MeticulousTranslator("bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk").run();
         } catch (UnirestException e) {
-            e.printStackTrace();
+            logger.error("Some other error", e);
+        }  catch (InterruptedException e) {
+            logger.warn("Interrupted!", e);
+            Thread.currentThread().interrupt();
         }
     }
 }

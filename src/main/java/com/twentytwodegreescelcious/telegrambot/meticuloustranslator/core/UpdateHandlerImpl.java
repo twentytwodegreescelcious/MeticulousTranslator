@@ -5,10 +5,12 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import javax.inject.Singleton;
+
 /**
  * Created by twentytwodegreescelcious on 28.12.2018.
  */
-
+@Singleton
 public class UpdateHandlerImpl implements UpdateHandler {
 
     private final static String ENDPOINT = "https://api.telegram.org/";

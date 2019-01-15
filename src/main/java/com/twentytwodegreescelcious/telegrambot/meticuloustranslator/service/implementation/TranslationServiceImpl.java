@@ -46,19 +46,7 @@ public class TranslationServiceImpl implements TranslationService {
     }
 
     private void parseQuery(String query, int wordPosition) {
-        /*
-        Query example: /translate en ru Hello
-        sourceLanguage: en
-        targetLanguage: ru
-        word: Hello
-         */
         String[] arr = query.split(" ");
-        if (sourceLanguage == null) {
-            sourceLanguage = arr[1];
-        }
-        if (targetLanguage == null) {
-            targetLanguage = arr[2];
-        }
         for (int i=wordPosition; i< arr.length; i++) {
             word += " " + arr[i];
         }
