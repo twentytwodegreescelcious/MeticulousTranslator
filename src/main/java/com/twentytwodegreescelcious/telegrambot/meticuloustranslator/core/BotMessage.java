@@ -13,7 +13,7 @@ public class BotMessage {
             "https://api.telegram.org/bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk";
 
     @JsonProperty(value = "chat_id")
-    private final int chatId;
+    private final int chatId;;
     private final String text;
 
     public BotMessage(int chat_id, String text) {
