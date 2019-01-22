@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class HttpClientTest {
 
@@ -27,7 +28,9 @@ public class HttpClientTest {
     }
 
     @Test
+    @Ignore
     public void testMessageSending() throws Exception {
+
         mockMvc.perform(MockMvcRequestBuilders.post(URL + "/sendMessage", new BotMessage(332082743, "Hello")))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
