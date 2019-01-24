@@ -13,7 +13,6 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.TranslationServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.SpringApplication;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -90,7 +89,7 @@ public class MeticulousTranslator {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(MeticulousTranslator.class, args);
+//        SpringApplication.run(MeticulousTranslator.class, args);
         new MeticulousTranslator("bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk").run();
     }
 }
