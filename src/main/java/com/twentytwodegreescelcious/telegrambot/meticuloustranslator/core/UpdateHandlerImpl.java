@@ -6,13 +6,11 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Update;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net.HttpClient;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,10 +35,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
         HttpResponse<JsonNode> response = Unirest.post(ENDPOINT + token + "/getUpdates")
                 .field("offset", offset)
                 .asJson();
-        Response res = HttpClient.POST(ENDPOINT +token+ "/getUpdates", new JsonNode("{offset:" + offset + "}"));
-
         if (response.getStatus() == 200) {
-
             JSONArray responses = response.getBody().getObject().getJSONArray("result");
             List<Result> results = new ArrayList<>();
             try {

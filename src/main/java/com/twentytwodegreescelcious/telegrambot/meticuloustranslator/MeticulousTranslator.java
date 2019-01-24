@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
+import static com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.Command.*;
 /**
  * Created by twentytwodegreescelcious on 12/28/2018.
  */
@@ -39,7 +41,7 @@ public class MeticulousTranslator {
     }
 
     @SuppressWarnings("squid:S2189")
-    public void run() {
+    private void run() {
         int lastUpdateId = 0;
         List<Result> results = new ArrayList<>();
         while (true) {
@@ -48,12 +50,8 @@ public class MeticulousTranslator {
             } catch (UnirestException e) {
                 logger.error("Some other error", e);
             }
-            if (!results.isEmpty()) {
-                if (results.equals(Collections.emptyList())) {
-                    continue;
-                } else {
-                    lastUpdateId = (results.get(results.size() - 1).getUpdateId()) + 1;
-                }
+            if (!results.isEmpty() || !results.equals(Collections.emptyList())) {
+                lastUpdateId = (results.get(results.size() - 1).getUpdateId()) + 1;
                 for (int i = 0; i < results.size(); i++) {
                     for (Result r : results) {
                         String text = r.getMessage().getText();
@@ -74,12 +72,12 @@ public class MeticulousTranslator {
     }
 
     private void parseAndExecuteCommand(String text, int chatId, String username, String defaultLanguage) {
-        if (text.contains("/greet")) {
+        if (text.contains("/" + greet)) {
             invoker.executeCommand(new GreetingsCommand(chatId, "Greetings to you, " +
                     username)); // commandDao.greet(chatId, text);
-        } else if (text.contains("/start")) {
+        } else if (text.contains("/" + start)) {
             invoker.executeCommand(new StartCommand(chatId));
-        } else if (text.contains("/translate")) {
+        } else if (text.contains("/" + translate)) {
             try {
                 invoker.executeCommand(new TranslateCommand(chatId, new TranslationServiceImpl().translate(text, defaultLanguage.substring(0, 1))));
             } catch (IOException exc) {
@@ -89,7 +87,6 @@ public class MeticulousTranslator {
     }
 
     public static void main(String[] args) {
-//        SpringApplication.run(MeticulousTranslator.class, args);
         new MeticulousTranslator("bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk").run();
     }
 }
