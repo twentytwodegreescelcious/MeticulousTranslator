@@ -1,6 +1,6 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl;
 
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandler;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -8,7 +8,7 @@ import org.mockito.Mock;
 public class GreetingsCommandTest {
 
     @Mock
-    private UpdateHandler updateHandler;
+    private UpdateService updateService;
 
     @Test
     public void testCommandExecution() {

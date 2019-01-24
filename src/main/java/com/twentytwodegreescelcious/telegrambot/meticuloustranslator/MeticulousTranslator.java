@@ -2,8 +2,8 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator;
 
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandler;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandlerImpl;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.UpdateServiceImpl;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.Invoker;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.BotCommandExecutor;
@@ -34,7 +34,7 @@ public class MeticulousTranslator {
     private static Logger logger = LoggerFactory.getLogger(MeticulousTranslator.class);
 
     @Inject
-    private UpdateHandler updateHandler = new UpdateHandlerImpl();
+    private UpdateService updateService = new UpdateServiceImpl();
 
     public MeticulousTranslator(String token) {
         this.token = token;
@@ -46,7 +46,7 @@ public class MeticulousTranslator {
         List<Result> results = new ArrayList<>();
         while (true) {
             try {
-                results = updateHandler.getUpdates(this.token, lastUpdateId++);
+                results = updateService.getUpdates(this.token, lastUpdateId++);
             } catch (UnirestException e) {
                 logger.error("Some other error", e);
             }

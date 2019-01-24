@@ -1,7 +1,5 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net;
 
-import org.glassfish.jersey.client.JerseyClient;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
