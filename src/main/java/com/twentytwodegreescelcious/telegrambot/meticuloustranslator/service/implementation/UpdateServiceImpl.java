@@ -1,8 +1,5 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.BotMessage;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.RequestedUpdateConfiguration;
@@ -11,6 +8,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net.HttpClient;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,16 +34,12 @@ public class UpdateServiceImpl implements UpdateService {
     }
 
     @Override
-    public List<Result> getUpdates(String token, int offset) throws UnirestException {
-//        HttpResponse<JsonNode> response = Unirest.post(ENDPOINT + token + "/getUpdates")
-//                .field("offset", offset)
-//                .asJson();
+    public List<Result> getUpdates(String token, int offset) {
         Response res = HttpClient.POST(ENDPOINT + token + "/getUpdates", new RequestedUpdateConfiguration(offset));
-        String responseString = res.getEntity();
-        res.bufferEntity();
+        String responseString = res.readEntity(String.class);
         if (res.getStatus() == 200) {
-            JSONArray responses = new JSONArray(responseString);
-//            JSONArray responses = response.getBody().getObject().getJSONArray("result");
+            JSONObject jsonResponseObject = new JSONObject(responseString);
+            JSONArray responses = jsonResponseObject.getJSONArray("result");
             List<Result> results = new ArrayList<>();
             try {
                 results = new Update().parseResults(responses);

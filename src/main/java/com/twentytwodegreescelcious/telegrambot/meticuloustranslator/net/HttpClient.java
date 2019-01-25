@@ -24,8 +24,6 @@ public class HttpClient {
         Response res = CLIENT.target(url)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(data, MediaType.APPLICATION_JSON_TYPE));
-        res.readEntity(Object.class);
-        System.out.println(res.getStatus());
         return res;
     }
 }
