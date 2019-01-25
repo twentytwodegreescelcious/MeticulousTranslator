@@ -1,21 +1,16 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.BotMessage;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.RequestedUpdateConfiguration;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Update;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net.HttpClient;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,16 +31,9 @@ public class UpdateServiceImpl implements UpdateService {
     @Override
     public List<Result> getUpdates(String token, int offset) {
         Response res = HttpClient.POST(ENDPOINT + token + "/getUpdates", new RequestedUpdateConfiguration(offset));
-        String responseString = res.readEntity(String.class);
+        Update update = res.readEntity(Update.class);
         if (res.getStatus() == 200) {
-            JSONObject jsonResponseObject = new JSONObject(responseString);
-            JSONArray responses = jsonResponseObject.getJSONArray("result");
-            List<Result> results = new ArrayList<>();
-            try {
-                results = new Update().parseResults(responses);
-            } catch (IOException exc) {
-                logger.error("Error while parsing JSON", exc);
-            }
+            List<Result> results = update.getResults();
             return results;
         } else {
             logger.error("Getting updates failed, status: " + res.getStatus());

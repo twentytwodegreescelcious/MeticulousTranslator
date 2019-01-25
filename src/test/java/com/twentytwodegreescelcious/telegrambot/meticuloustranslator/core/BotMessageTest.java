@@ -20,8 +20,7 @@ public class BotMessageTest {
     public void testMessageSending() throws Exception {
         mockStatic(HttpClient.class);
 
-        BotMessage botMessage = new BotMessage(0, "test");
-        botMessage.send();
+        new BotMessage(0, anyString()).send();
 
         verifyStatic(Mockito.times(1));
         HttpClient.POST(anyString(), anyObject());

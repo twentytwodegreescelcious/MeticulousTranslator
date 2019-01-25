@@ -53,12 +53,6 @@ public class TranslationServiceImpl implements TranslationService {
     }
 
     private String parseResult(String inputJson) {
-        /*
-         * inputJson for word 'hello' translated to language Hindi from English-
-         * [[["नमस्ते","hello",,,1]],,"en"]
-         * We have to get 'नमस्ते ' from this json.
-         */
-
         JSONArray jsonArray = new JSONArray(inputJson);
         JSONArray jsonArray2 = (JSONArray) jsonArray.get(0);
         JSONArray jsonArray3 = (JSONArray) jsonArray2.get(0);

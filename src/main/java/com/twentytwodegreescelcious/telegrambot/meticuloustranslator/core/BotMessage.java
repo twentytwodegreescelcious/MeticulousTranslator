@@ -13,20 +13,13 @@ public class BotMessage {
             "https://api.telegram.org/bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk";
 
     @JsonProperty(value = "chat_id")
-    private final int chatId;;
+    private final int chatId;
+    @JsonProperty(value = "text")
     private final String text;
 
-    public BotMessage(int chat_id, String text) {
-        this.chatId = chat_id;
+    public BotMessage(int chatId, String text) {
+        this.chatId = chatId;
         this.text = text;
-    }
-
-    public int getChatId() {
-        return chatId;
-    }
-
-    public String getText() {
-        return text;
     }
 
     public void send() {
