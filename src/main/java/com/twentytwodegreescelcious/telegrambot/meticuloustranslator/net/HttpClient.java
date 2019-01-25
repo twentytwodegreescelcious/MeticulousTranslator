@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response;
 
 public class HttpClient {
 
-    public static final Client CLIENT = ClientBuilder.newClient();
+    private static final Client CLIENT = ClientBuilder.newClient();
 
     public static <T> T GET(String url, Class<T> response) {
         return CLIENT.target(url)
@@ -24,8 +24,6 @@ public class HttpClient {
         Response res = CLIENT.target(url)
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .post(Entity.entity(data, MediaType.APPLICATION_JSON_TYPE));
-        res.readEntity(Object.class);
-        System.out.println(res.getStatus());
         return res;
     }
 }

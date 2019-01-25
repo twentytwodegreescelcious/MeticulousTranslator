@@ -1,8 +1,7 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl;
 
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.BotMessage;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandler;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.UpdateHandlerImpl;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.UpdateServiceImpl;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.BotCommand;
 
 /**
@@ -10,18 +9,18 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
  */
 public class GreetingsCommand implements BotCommand {
 
-    private UpdateHandler updateHandler;
+    private UpdateService updateService;
     private int chatId;
     private String text;
 
     public GreetingsCommand(Integer chatId, String text) {
-        this.updateHandler = new UpdateHandlerImpl();
+        this.updateService = new UpdateServiceImpl();
         this.chatId = chatId;
         this.text = text;
     }
 
     @Override
     public void execute() {
-        this.updateHandler.sendMessage(chatId, text);
+        this.updateService.sendMessage(chatId, text);
     }
 }

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by twentytwodegreescelcious on 28.12.2018.
  */
-
 public class Chat {
     @JsonProperty(value="id")
     private int id;
@@ -23,6 +22,7 @@ public class Chat {
     private String type;
 
     public int getId() {
+
         return id;
     }
 

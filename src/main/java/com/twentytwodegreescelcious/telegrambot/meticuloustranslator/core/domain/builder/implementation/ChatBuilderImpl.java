@@ -3,6 +3,8 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domai
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Chat;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.builder.ChatBuilder;
 
+import java.util.List;
+
 /**
  * Created by twentytwodegreescelcious on 12/31/2018.
  */
