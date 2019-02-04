@@ -10,7 +10,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 public class TranslateCommand implements BotCommand {
     private UpdateService updateService;
     private int chatId;
-    private static String text;
+    private String text;
 
     public TranslateCommand(int chatId, String text) {
         this.updateService = new UpdateServiceImpl();

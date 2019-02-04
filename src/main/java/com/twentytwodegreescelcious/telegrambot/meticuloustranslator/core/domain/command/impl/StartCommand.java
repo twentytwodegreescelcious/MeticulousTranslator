@@ -11,7 +11,7 @@ public class StartCommand implements BotCommand {
 
     private UpdateService updateService;
     private int chatId;
-    private static final String text = "I am yours to command.";
+    private static final String TEXT = "I am yours to command.";
 
     public StartCommand(Integer chatId) {
         this.updateService = new UpdateServiceImpl();
@@ -20,6 +20,6 @@ public class StartCommand implements BotCommand {
 
     @Override
     public void execute() {
-        this.updateService.sendMessage(chatId, text);
+        this.updateService.sendMessage(chatId, TEXT);
     }
 }

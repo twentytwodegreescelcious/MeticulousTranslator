@@ -15,14 +15,12 @@ import java.net.URLEncoder;
  */
 public class TranslationServiceImpl implements TranslationService {
 
-    private String sourceLanguage;
-    private String targetLanguage;
     private String word ="";
 
     @Override
     public String translate(String query, String defaultLanguage) throws IOException {
-        sourceLanguage = "auto";
-        targetLanguage = defaultLanguage;
+        String sourceLanguage = "auto";
+        String targetLanguage = defaultLanguage;
         parseQuery(query, 1);
         String url = "https://translate.googleapis.com/translate_a/single?" +
                 "client=gtx&" +
@@ -36,7 +34,7 @@ public class TranslationServiceImpl implements TranslationService {
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(con.getInputStream()));
         String inputLine;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
         while ((inputLine = in.readLine()) != null) {
             response.append(inputLine);
         }
@@ -47,9 +45,11 @@ public class TranslationServiceImpl implements TranslationService {
 
     private void parseQuery(String query, int wordPosition) {
         String[] arr = query.split(" ");
+        StringBuilder sb = new StringBuilder();
         for (int i=wordPosition; i< arr.length; i++) {
-            word += " " + arr[i];
+            sb.append(" " + arr[i]);
         }
+        word = sb.toString();
     }
 
     private String parseResult(String inputJson) {

@@ -20,8 +20,8 @@ import java.util.List;
 @Singleton
 public class UpdateServiceImpl implements UpdateService {
 
-    private final static String ENDPOINT = "https://api.telegram.org/";
     private Logger logger = LoggerFactory.getLogger(UpdateServiceImpl.class);
+    private static final String ENDPOINT = "https://api.telegram.org/";
 
     @Override
     public void sendMessage(Integer chatId, String text) {
@@ -33,8 +33,7 @@ public class UpdateServiceImpl implements UpdateService {
         Response res = HttpClient.POST(ENDPOINT + token + "/getUpdates", new RequestedUpdateConfiguration(offset));
         Update update = res.readEntity(Update.class);
         if (res.getStatus() == 200) {
-            List<Result> results = update.getResults();
-            return results;
+            return update.getResults();
         } else {
             logger.error("Getting updates failed, status: " + res.getStatus());
         }
