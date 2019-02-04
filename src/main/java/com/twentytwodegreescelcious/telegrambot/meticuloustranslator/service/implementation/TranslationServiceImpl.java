@@ -1,8 +1,10 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation;
 
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net.HttpClient;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.TranslationService;
 import org.json.JSONArray;
 
+import javax.inject.Singleton;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,6 +15,7 @@ import java.net.URLEncoder;
 /**
  * Created by twentytwodegreescelcious on 1/8/2019.
  */
+@Singleton
 public class TranslationServiceImpl implements TranslationService {
 
     private String word ="";
