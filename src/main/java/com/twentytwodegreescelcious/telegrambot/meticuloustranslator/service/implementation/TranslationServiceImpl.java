@@ -7,13 +7,12 @@ import javax.inject.Singleton;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URLEncoder;
+import java.net.URI;
 import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CoderResult;
 
 /**
  * Created by twentytwodegreescelcious on 1/8/2019.
@@ -32,7 +31,8 @@ public class TranslationServiceImpl implements TranslationService {
                 "client=gtx&" +
                 "sl=" + sourceLanguage +
                 "&tl=" + targetLanguage +
-                "&dt=t&q=" + URLEncoder.encode(word, "UTF-8");
+                "&dt=t&q=" + word.replaceAll(" ", "%20");
+        URI uri = URI.create(url);
 //        URL obj = new URL(url);
 //        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 //        con.setRequestProperty("User-Agent", "Mozilla/5.0");
@@ -46,12 +46,12 @@ public class TranslationServiceImpl implements TranslationService {
 //        }
 //        in.close();
         Response response = ClientBuilder.newClient()
-                .target(url)
-                .request(MediaType.APPLICATION_JSON_TYPE)
+                .target(uri)
+                .request(MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8")
                 .property("User-Agent", "Mozilla/5.0")
                 .get();
         String responseString = response.readEntity(String.class);
-        return parseResult(responseString);
+         return parseResult(responseString);
     }
 
     private void parseQuery(String query, int wordPosition) {
