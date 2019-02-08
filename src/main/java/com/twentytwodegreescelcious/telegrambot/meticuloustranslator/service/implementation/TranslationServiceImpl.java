@@ -47,8 +47,8 @@ public class TranslationServiceImpl implements TranslationService {
 //        in.close();
         Response response = ClientBuilder.newClient()
                 .target(uri)
-                .request(MediaType.APPLICATION_JSON_TYPE + ";charset=utf-8")
-                .property("User-Agent", "Mozilla/5.0")
+                .request(MediaType.APPLICATION_JSON + ";charset=utf-16")
+                .property("User-Agent", "Chrome/71.0.3578.98")
                 .get();
         String responseString = response.readEntity(String.class);
          return parseResult(responseString);
