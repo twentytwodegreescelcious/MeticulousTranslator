@@ -23,7 +23,7 @@ public class TranslationServiceImpl implements TranslationService {
     private String word ="";
 
     @Override
-    public String translate(String query, String defaultLanguage) throws IOException {
+    public String translate(String query, String defaultLanguage) {
         String sourceLanguage = "auto";
         String targetLanguage = defaultLanguage;
         parseQuery(query, 1);
