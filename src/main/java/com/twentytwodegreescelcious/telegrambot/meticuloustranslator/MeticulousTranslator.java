@@ -6,8 +6,10 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.Invoker;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.*;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.DictationServiceImpl;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.TranslationServiceImpl;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.UpdateServiceImpl;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.util.Languages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -20,7 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import javax.inject.Inject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +64,11 @@ public class MeticulousTranslator {
                         int chatId = r.getMessage().getChat().getId();
                         String username = r.getMessage().getFrom().getUsername();
                         String defaultLanguage = r.getMessage().getFrom().getLanguageCode();
-                        parseAndExecuteCommand(text, chatId, username, defaultLanguage);
+                        try {
+                            parseAndExecuteCommand(text, chatId, username, defaultLanguage);
+                        } catch (IOException exc) {
+                            logger.error("Error while parsing translation response");
+                        }
                     }
                 }
             }
@@ -75,20 +81,25 @@ public class MeticulousTranslator {
         }
     }
 
-    private void parseAndExecuteCommand(String text, int chatId, String username, String defaultLanguage) {
+    private void parseAndExecuteCommand(String text, int chatId, String username, String defaultLanguage)
+            throws IOException {
         if (text.contains("/" + greet)) {
             invoker.executeCommand(new GreetingsCommand(chatId, "Greetings to you, " +
                     username)); // commandDao.greet(chatId, text);
         } else if (text.contains("/" + start)) {
             invoker.executeCommand(new StartCommand(chatId, defaultLanguage));
         } else if (text.contains("/" + translate)) {
-            invoker.executeCommand(new TranslateCommand(chatId, new TranslationServiceImpl().translate(text, defaultLanguage.substring(0, 1))));
-        } else if (text.contains("/" + add)) {
-            invoker.executeCommand(new AddCommand(chatId, defaultLanguage));
+            invoker.executeCommand(
+                    new TranslateCommand(chatId,
+                            new TranslationServiceImpl().translate(text, defaultLanguage.substring(0, 1))));
+        } else if (text.contains("/" + setlanguage)) {
+            invoker.executeCommand(new AddCommand(chatId, new DictationServiceImpl().setLanguage(chatId, text)));
         }
     }
 
     public static void main(String[] args) {
+        System.out.println(Languages.FRENCH.name());
+
         SpringApplication.run(MeticulousTranslator.class, args);
     }
 

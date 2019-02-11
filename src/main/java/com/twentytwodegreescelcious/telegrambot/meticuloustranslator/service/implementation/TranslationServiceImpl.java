@@ -4,15 +4,18 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.Tra
 import org.json.JSONArray;
 
 import javax.inject.Singleton;
+import javax.ws.rs.Produces;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
+import java.net.URL;
+import java.util.Locale;
 
 /**
  * Created by twentytwodegreescelcious on 1/8/2019.
@@ -20,10 +23,10 @@ import java.nio.charset.CharsetDecoder;
 @Singleton
 public class TranslationServiceImpl implements TranslationService {
 
-    private String word ="";
+    private String word = "";
 
     @Override
-    public String translate(String query, String defaultLanguage) {
+    public String translate(String query, String defaultLanguage) throws IOException {
         String sourceLanguage = "auto";
         String targetLanguage = defaultLanguage;
         parseQuery(query, 1);
@@ -32,32 +35,41 @@ public class TranslationServiceImpl implements TranslationService {
                 "sl=" + sourceLanguage +
                 "&tl=" + targetLanguage +
                 "&dt=t&q=" + word.replaceAll(" ", "%20");
-        URI uri = URI.create(url);
-//        URL obj = new URL(url);
-//        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-//        con.setRequestProperty("User-Agent", "Mozilla/5.0");
-//
+//        URI uri = URI.create(url);
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+        con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+//        Response response = ClientBuilder.newClient()
+//                .target(uri)
+//                .request(MediaType.APPLICATION_JSON)
+//                .property("User-Agent", "Mozilla/5.0")
+//                .get();
 //        BufferedReader in = new BufferedReader(
-//                new InputStreamReader(con.getInputStream()));
-//        String inputLine;
-//        StringBuilder response = new StringBuilder();
-//        while ((inputLine = in.readLine()) != null) {
-//            response.append(inputLine);
+//                new InputStreamReader(response.readEntity(InputStream.class))
+//        );
+////        String responseString = response.readEntity(String.class);
+//        String responseString;
+//        StringBuilder resp = new StringBuilder();
+//        while ((responseString = in.readLine()) != null) {
+//            resp.append(responseString);
 //        }
 //        in.close();
-        Response response = ClientBuilder.newClient()
-                .target(uri)
-                .request(MediaType.APPLICATION_JSON + ";charset=utf-16")
-                .property("User-Agent", "Chrome/71.0.3578.98")
-                .get();
-        String responseString = response.readEntity(String.class);
-         return parseResult(responseString);
+        return parseResult(response.toString());
     }
 
     private void parseQuery(String query, int wordPosition) {
         String[] arr = query.split(" ");
         StringBuilder sb = new StringBuilder();
-        for (int i=wordPosition; i< arr.length; i++) {
+        for (int i = wordPosition; i < arr.length; i++) {
             sb.append(" " + arr[i]);
         }
         word = sb.toString();

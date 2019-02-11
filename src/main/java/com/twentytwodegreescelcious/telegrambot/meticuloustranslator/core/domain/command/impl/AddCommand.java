@@ -21,6 +21,6 @@ public class AddCommand implements BotCommand {
 
     @Override
     public void execute() {
-        this.updateService.sendMessage(chatId, "This should not appear since it's not finished."); //TODO
+        this.updateService.sendMessage(chatId, text);
     }
 }
