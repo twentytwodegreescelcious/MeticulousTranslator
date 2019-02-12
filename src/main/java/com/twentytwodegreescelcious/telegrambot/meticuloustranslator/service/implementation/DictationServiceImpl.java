@@ -8,10 +8,13 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.uti
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 /**
  * Created by twentytwodegreescelcious on 2/7/2019.
  */
 @Service
+@Transactional
 public class DictationServiceImpl implements DictationService {
 
     @Autowired

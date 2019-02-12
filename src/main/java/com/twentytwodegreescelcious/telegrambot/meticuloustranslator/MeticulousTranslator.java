@@ -35,12 +35,11 @@ import static com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core
  */
 
 @SpringBootApplication
-@EnableAutoConfiguration
-@EnableJpaRepositories(basePackages = "com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dao")
-@EntityScan("com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo")
-@ComponentScans({@ComponentScan(basePackages = "com.twentytwodegreescelcious.telegrambot.meticuloustranslator"),
-        @ComponentScan(basePackages = "com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation")})
-public class MeticulousTranslator {
+//@EnableJpaRepositories(basePackages = "com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dao")
+//@EntityScan("com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo")
+//@ComponentScans({@ComponentScan(basePackages = "com.twentytwodegreescelcious.telegrambot.meticuloustranslator"),
+//        @ComponentScan(basePackages = "com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation")})
+public class MeticulousTranslator implements CommandLineRunner{
 
     private static final String TOKEN = "bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk";
 
@@ -52,7 +51,8 @@ public class MeticulousTranslator {
     private DictationService dictationService;
 
     @SuppressWarnings("squid:S2189")
-    private void run() {
+    @Override
+    public void run(String... strings) {
         int lastUpdateId = 0;
         List<Result> results = new ArrayList<>();
         while (true) {
@@ -105,13 +105,5 @@ public class MeticulousTranslator {
     public static void main(String[] args) {
         SpringApplication.run(MeticulousTranslator.class, args);
     }
-
-    @Bean
-    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-        return args -> {
-            new MeticulousTranslator().run();
-        };
-    }
-
 
 }

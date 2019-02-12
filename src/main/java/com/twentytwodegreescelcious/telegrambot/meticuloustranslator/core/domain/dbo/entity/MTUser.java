@@ -10,7 +10,6 @@ import javax.persistence.*;
 public class MTUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "chat_id", nullable = false)
     private Integer id;
     @Column(name = "default_language", length = 2, nullable = false)
