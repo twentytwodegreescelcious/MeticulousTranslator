@@ -1,11 +1,9 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.util;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
 /**
  * Created by twentytwodegreescelcious on 2/11/2019.
  */
-public enum Languages {
+public enum Language {
     ENGLISH("en"),
 
     RUSSIAN("ru"),
@@ -22,7 +20,7 @@ public enum Languages {
 
     private String value;
 
-    Languages(String value) {
+    Language(String value) {
         this.value = value;
     }
 

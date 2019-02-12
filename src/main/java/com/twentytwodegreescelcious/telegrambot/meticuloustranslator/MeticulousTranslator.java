@@ -5,13 +5,13 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.Invoker;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.*;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.DictationService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.DictationServiceImpl;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.TranslationServiceImpl;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.UpdateServiceImpl;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.util.Languages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -20,6 +20,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.io.IOException;
@@ -35,9 +36,10 @@ import static com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@EnableJpaRepositories("com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dao")
+@EnableJpaRepositories(basePackages = "com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dao")
 @EntityScan("com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo")
-@ComponentScan("com.twentytwodegreescelcious.telegrambot.meticuloustranslator")
+@ComponentScans({@ComponentScan(basePackages = "com.twentytwodegreescelcious.telegrambot.meticuloustranslator"),
+        @ComponentScan(basePackages = "com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation")})
 public class MeticulousTranslator {
 
     private static final String TOKEN = "bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk";
@@ -45,6 +47,9 @@ public class MeticulousTranslator {
     private Invoker invoker = new BotCommandExecutor();
     private static Logger logger = LoggerFactory.getLogger(MeticulousTranslator.class);
     private UpdateService updateService = new UpdateServiceImpl();
+
+    @Autowired
+    private DictationService dictationService;
 
     @SuppressWarnings("squid:S2189")
     private void run() {
@@ -93,13 +98,11 @@ public class MeticulousTranslator {
                     new TranslateCommand(chatId,
                             new TranslationServiceImpl().translate(text, defaultLanguage.substring(0, 1))));
         } else if (text.contains("/" + setlanguage)) {
-            invoker.executeCommand(new AddCommand(chatId, new DictationServiceImpl().setLanguage(chatId, text)));
+            invoker.executeCommand(new AddCommand(chatId, dictationService.setLanguage(chatId, text)));
         }
     }
 
     public static void main(String[] args) {
-        System.out.println(Languages.FRENCH.name());
-
         SpringApplication.run(MeticulousTranslator.class, args);
     }
 
@@ -109,5 +112,6 @@ public class MeticulousTranslator {
             new MeticulousTranslator().run();
         };
     }
+
 
 }

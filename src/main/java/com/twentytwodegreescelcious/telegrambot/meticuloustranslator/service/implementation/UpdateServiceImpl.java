@@ -8,6 +8,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net.HttpCli
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * Created by twentytwodegreescelcious on 28.12.2018.
  */
+@Service
 @Singleton
 public class UpdateServiceImpl implements UpdateService {
 

@@ -2,6 +2,7 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.im
 
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.TranslationService;
 import org.json.JSONArray;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Singleton;
 import javax.ws.rs.Produces;
@@ -20,6 +21,7 @@ import java.util.Locale;
 /**
  * Created by twentytwodegreescelcious on 1/8/2019.
  */
+@Service
 @Singleton
 public class TranslationServiceImpl implements TranslationService {
 
