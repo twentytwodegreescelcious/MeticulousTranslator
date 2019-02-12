@@ -5,6 +5,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.Invoker;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.*;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.MTUser;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.MTUserService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.DictationService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation.TranslationServiceImpl;
@@ -23,6 +25,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +36,7 @@ import static com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core
 /**
  * Created by twentytwodegreescelcious on 12/28/2018.
  */
-
+@Transactional
 @SpringBootApplication
 //@EnableJpaRepositories(basePackages = "com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dao")
 //@EntityScan("com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo")
@@ -49,6 +52,9 @@ public class MeticulousTranslator implements CommandLineRunner{
 
     @Autowired
     private DictationService dictationService;
+
+    @Autowired
+    private MTUserService mtUserService;
 
     @SuppressWarnings("squid:S2189")
     @Override
@@ -69,6 +75,10 @@ public class MeticulousTranslator implements CommandLineRunner{
                         int chatId = r.getMessage().getChat().getId();
                         String username = r.getMessage().getFrom().getUsername();
                         String defaultLanguage = r.getMessage().getFrom().getLanguageCode();
+                        MTUser mtUser = mtUserService.getMTUser(chatId);
+                        if (null != mtUser) {
+                            defaultLanguage = mtUser.getDefaultLanguage();
+                        }
                         try {
                             parseAndExecuteCommand(text, chatId, username, defaultLanguage);
                         } catch (IOException exc) {
@@ -96,7 +106,7 @@ public class MeticulousTranslator implements CommandLineRunner{
         } else if (text.contains("/" + translate)) {
             invoker.executeCommand(
                     new TranslateCommand(chatId,
-                            new TranslationServiceImpl().translate(text, defaultLanguage.substring(0, 1))));
+                            new TranslationServiceImpl().translate(text, defaultLanguage.substring(0, 2))));
         } else if (text.contains("/" + setlanguage)) {
             invoker.executeCommand(new AddCommand(chatId, dictationService.setLanguage(chatId, text)));
         }

@@ -23,7 +23,6 @@ public class StartCommand implements BotCommand {
 
     @Override
     public void execute() {
-        new DictationServiceImpl().setLanguage(chatId, defaultLanguage);
         this.updateService.sendMessage(chatId, TEXT + defaultLanguage);
     }
 }

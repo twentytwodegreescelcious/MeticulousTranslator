@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by twentytwodegreescelcious on 2/12/2019.
@@ -24,14 +25,15 @@ public class MTUserServiceImpl implements MTUserService {
 
     @Override
     public MTUser getMTUser(Integer id) {
-        if (mtUserDao.existsById(id)) {
-            return mtUserDao.getOne(id);
+        Optional<MTUser> optional= mtUserDao.findById(id);
+        if (optional.isPresent()) {
+            return optional.get();
         } else return null;
     }
 
     @Override
     public MTUser editMTUser(MTUser mtUser) {
-        return mtUserDao.save(mtUser);
+        return mtUserDao.saveAndFlush(mtUser);
     }
 
     @Override

@@ -14,6 +14,11 @@ public class MTUser {
     private Integer id;
     @Column(name = "default_language", length = 2, nullable = false)
     private String defaultLanguage;
+    @Column(name="current_topic")
+    private String currentTopic;
+    @Column(name="is_dictation")
+    private boolean isDictation = false;
+
 
     public MTUser() {
     }
@@ -32,5 +37,21 @@ public class MTUser {
 
     public void setDefaultLanguage(String defaultLanguage) {
         this.defaultLanguage = defaultLanguage;
+    }
+
+    public String getCurrentTopic() {
+        return currentTopic;
+    }
+
+    public void setCurrentTopic(String currentTopic) {
+        this.currentTopic = currentTopic;
+    }
+
+    public boolean isDictation() {
+        return isDictation;
+    }
+
+    public void setDictation(boolean dictation) {
+        isDictation = dictation;
     }
 }
