@@ -7,12 +7,14 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
  * Created by twentytwodegreescelcious on 2/12/2019.
  */
 @Service
+@Transactional
 public class WordPairServiceImpl implements WordPairService {
 
     @Autowired

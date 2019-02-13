@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by twentytwodegreescelcious on 2/12/2019.
  */
-public interface MTUserService {
+public interface UserService {
     MTUser createMTUser(MTUser mtUser);
     MTUser getMTUser(Integer id);
     MTUser editMTUser(MTUser mtUser);
@@ -15,4 +15,5 @@ public interface MTUserService {
     void deleteMTUser(Integer id);
     List<MTUser> getAllMTUsers();
     Long countMTUsers();
+    String setLanguage(Integer chatId, String text);
 }

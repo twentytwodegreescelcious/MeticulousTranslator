@@ -5,6 +5,4 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service;
  */
 public interface DictationService {
 
-    String setLanguage(Integer chatId, String text);
-
 }
