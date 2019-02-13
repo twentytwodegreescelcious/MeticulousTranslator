@@ -4,5 +4,5 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domai
  * Created by twentytwodegreescelcious on 1/24/2019.
  */
 public enum Command {
-    greet, translate, start, setlanguage,availablelanguages, newtopic, closetopic, addword
+    greet, translate, start, setlanguage,availablelanguages, newtopic, closetopic, addword, getwordsfortopic
 }

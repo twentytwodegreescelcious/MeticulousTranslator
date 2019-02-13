@@ -12,4 +12,5 @@ import java.util.List;
 @Repository
 public interface WordPairDao extends JpaRepository<WordPair, Integer> {
     List<WordPair> findByTopicIgnoreCase(String topic);
+    WordPair findByWordAndTranslationAndTopicIgnoreCase(String word, String translation, String topic);
 }

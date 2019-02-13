@@ -16,7 +16,7 @@ public interface WordPairService {
     void deleteWordPair(WordPair wordPair);
     void deleteWordPair(Integer id);
     List<WordPair> getAllWordPairs();
-    List<WordPair> getWordPairsByTopic(String topic);
+    String getWordPairsByTopic(String topic);
     Long countWordPairs();
     List<String> getTopics(MTUser mtUser);
     List<String> getTopics(Integer chatId);

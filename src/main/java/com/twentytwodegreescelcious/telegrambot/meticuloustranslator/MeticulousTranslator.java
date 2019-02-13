@@ -114,15 +114,18 @@ public class MeticulousTranslator implements CommandLineRunner {
         } else if (text.contains("/" + availablelanguages)) {
             invoker.executeCommand(new GreetingsCommand(chatId, availableLanguages));
         } else if (text.contains("/" + newtopic)) {
-            invoker.executeCommand(new GreetingsCommand(chatId, userService.newTopic(chatId, text.substring(10))));
+            invoker.executeCommand(new GreetingsCommand(chatId, userService.newTopic(chatId, text.substring(10).trim())));
         } else if (text.contains("/" + closetopic)) {
             invoker.executeCommand(new GreetingsCommand(chatId, userService.closeTopic(chatId)));
         } else if (text.contains("/" + addword)) {
             invoker.executeCommand(new GreetingsCommand(chatId, wordPairService.createWordPair(chatId, text.substring(9))));
+        } else if (text.contains("/" + getwordsfortopic)) {
+            invoker.executeCommand(new GreetingsCommand(chatId, wordPairService.getWordPairsByTopic(text.substring(18).trim())));
         }
     }
 
     public static void main(String[] args) {
+
         SpringApplication.run(MeticulousTranslator.class, args);
     }
 

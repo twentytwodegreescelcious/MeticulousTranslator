@@ -43,6 +43,11 @@ public class WordPairServiceImpl implements WordPairService {
                         "\nOne day I'll become intelligent..." +
                         "\nTomorrow might be the day.";
             } else {
+                if (null != wordPairDao.findByWordAndTranslationAndTopicIgnoreCase(
+                        wordAndTranslation[0], wordAndTranslation[1], user.getCurrentTopic())) {
+                    return "Word pair " + wordAndTranslation[0] + " (word) || " + wordAndTranslation[1] + " (translation) " +
+                            "already exists within " + user.getCurrentTopic() + " topic.";
+                }
                 WordPair wp = new WordPair();
                 wp.setWord(wordAndTranslation[0]);
                 wp.setTranslation(wordAndTranslation[1]);
@@ -87,8 +92,21 @@ public class WordPairServiceImpl implements WordPairService {
     }
 
     @Override
-    public List<WordPair> getWordPairsByTopic(String topic) {
-        return wordPairDao.findByTopicIgnoreCase(topic);
+    public String getWordPairsByTopic(String topic) {
+        String r = "" ;
+        List<WordPair> wordPairs = wordPairDao.findByTopicIgnoreCase(topic);
+        if (wordPairs.isEmpty()) {
+            return "Sorry, but the requested topic " + topic + " is empty or does not exist.";
+        } else {
+            r = "Showing word pairs for " + topic + " topic:\n";
+            for(WordPair wp : wordPairs) {
+                r += wp.getWord();
+                r+= " || ";
+                r+=wp.getTranslation();
+                r+="\n\n";
+            }
+        }
+        return r;
     }
 
     @Override

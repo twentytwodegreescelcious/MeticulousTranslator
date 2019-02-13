@@ -1,0 +1,9 @@
+start - Begin conversation with me.
+greet - Kindly asks me to welcome you.
+setlanguage - I'll translate all the stuff to this language.
+translate - I'll destroy the Universe, maybe. Or I could translate what you send me. Mind the 50% chance of the Apocalypse.
+availablelanguages - I'll show the list of languages that I know and can translate to.
+newtopic - Start a new topic.
+addword - I'll save the word and translation for it. The format is "word - translation".
+getwordsfortopic - I'll list all the words that relate to the specified topic.
+closetopic - Tells me that you are done with the words related to current topic.
