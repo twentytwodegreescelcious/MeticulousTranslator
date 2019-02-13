@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
             if (null != user.getCurrentTopic()) {
                 return "You didn't close your previous topic which is " +
                         user.getCurrentTopic() +
-                        ".\nPlease use /finishtopic command to stop adding words related to this topic.";
+                        ".\nPlease use /closetopic command to stop adding words related to this topic.";
             }
             user.setCurrentTopic(text);
             this.editMTUser(user);
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
                     "\nUse /addpair to add a pair of words to this topic." +
                     "\nAll the words you add will be related to this topic." +
                     "\nAs soon as you are done with adding words to current topic" +
-                    "use /finishtopic command to stop adding words related to this topic.";
+                    "use /closetopic command to stop adding words related to this topic.";
         }
     }
 

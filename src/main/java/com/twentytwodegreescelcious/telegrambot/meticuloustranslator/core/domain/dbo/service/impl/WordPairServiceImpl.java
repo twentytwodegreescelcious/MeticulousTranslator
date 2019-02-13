@@ -3,6 +3,7 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domai
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dao.WordPairDao;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.MTUser;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.WordPair;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.UserService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.WordPairService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,42 @@ public class WordPairServiceImpl implements WordPairService {
     @Autowired
     private WordPairDao wordPairDao;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public WordPair createWordPair(WordPair wordPair) {
         return wordPairDao.save(wordPair);
+    }
+
+    @Override
+    public String createWordPair(Integer chatId, String wordPair) {
+        MTUser user = userService.getMTUser(chatId);
+        if (null != user && null != user.getCurrentTopic()) {
+            String[] wordAndTranslation = wordPair.split(" - ");
+            if (wordAndTranslation.length > 2) {
+                return "For a reason we disallow to use '-' sign with spaces for any reason " +
+                        "except for separation of the word and translation.";
+            } else if (wordAndTranslation.length < 2) {
+                return "I didn't save that. The correct format is: \"word - translation\"." +
+                        "\nExcuse me for these formalities, I'm just a bot after all." +
+                        "\nOne day I'll become intelligent..." +
+                        "\nTomorrow might be the day.";
+            } else {
+                WordPair wp = new WordPair();
+                wp.setWord(wordAndTranslation[0]);
+                wp.setTranslation(wordAndTranslation[1]);
+                wp.setUser(user);
+                wp.setTopic(user.getCurrentTopic());
+                wordPairDao.save(wp);
+                return "Word pair " + wordAndTranslation[0] + " (word) || " + wordAndTranslation[1] + " (translation) " +
+                        "has been successfully saved within the " + wp.getTopic() + " topic.";
+            }
+        } else {
+            return "You can't save word that are not related to any topic." +
+                    "\nYou are seeing this because didn't start any topic yet. Use /newtopic to start a new topic.";
+        }
+
     }
 
     @Override

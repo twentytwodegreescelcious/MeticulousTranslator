@@ -7,6 +7,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.*;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.MTUser;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.UserService;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.WordPairService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.DictationService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.TranslationService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
@@ -48,6 +49,9 @@ public class MeticulousTranslator implements CommandLineRunner {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private WordPairService wordPairService;
 
     @Autowired
     private TranslationService translationService;
@@ -113,6 +117,8 @@ public class MeticulousTranslator implements CommandLineRunner {
             invoker.executeCommand(new GreetingsCommand(chatId, userService.newTopic(chatId, text.substring(10))));
         } else if (text.contains("/" + closetopic)) {
             invoker.executeCommand(new GreetingsCommand(chatId, userService.closeTopic(chatId)));
+        } else if (text.contains("/" + addword)) {
+            invoker.executeCommand(new GreetingsCommand(chatId, wordPairService.createWordPair(chatId, text.substring(9))));
         }
     }
 

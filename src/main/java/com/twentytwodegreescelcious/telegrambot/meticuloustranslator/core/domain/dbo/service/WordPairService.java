@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface WordPairService {
     WordPair createWordPair(WordPair wordPair);
+    String createWordPair(Integer chatId, String wordPair);
     WordPair getWordPair(Integer id);
     WordPair editWordPair(WordPair wordPair);
     void deleteWordPair(WordPair wordPair);

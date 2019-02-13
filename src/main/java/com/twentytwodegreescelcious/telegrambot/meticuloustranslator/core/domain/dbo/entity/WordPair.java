@@ -17,8 +17,6 @@ public class WordPair {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id")
     private MTUser user;
-    @Column(name = "language", length = 2, nullable = false)
-    private String language;
     @Column(name = "word", nullable = false)
     private String word;
     @Column(name = "translation", nullable = false)
@@ -43,14 +41,6 @@ public class WordPair {
 
     public void setUser(MTUser user) {
         this.user = user;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
     }
 
     public String getWord() {
