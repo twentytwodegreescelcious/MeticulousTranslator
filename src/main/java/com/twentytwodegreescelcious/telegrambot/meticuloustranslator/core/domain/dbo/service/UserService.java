@@ -16,4 +16,6 @@ public interface UserService {
     List<MTUser> getAllMTUsers();
     Long countMTUsers();
     String setLanguage(Integer chatId, String text);
+    String newTopic(Integer chatId, String text);
+    String closeTopic(Integer chatId);
 }

@@ -80,4 +80,40 @@ public class UserServiceImpl implements UserService {
             return "The requested language does not seem to be supported, sorry.";
         }
     }
+
+    @Override
+    public String newTopic(Integer chatId, String text) {
+        MTUser user = this.getMTUser(chatId);
+        if (null == user) {
+            return "You didn't specify your mother tongue. Use /setlanguage command first.";
+        } else {
+            if (null != user.getCurrentTopic()) {
+                return "You didn't close your previous topic which is " +
+                        user.getCurrentTopic() +
+                        ".\nPlease use /finishtopic command to stop adding words related to this topic.";
+            }
+            user.setCurrentTopic(text);
+            this.editMTUser(user);
+            return "You successfully started a new topic." +
+                    "\nUse /addpair to add a pair of words to this topic." +
+                    "\nAll the words you add will be related to this topic." +
+                    "\nAs soon as you are done with adding words to current topic" +
+                    "use /finishtopic command to stop adding words related to this topic.";
+        }
+    }
+
+    @Override
+    public String closeTopic(Integer chatId) {
+        MTUser user = this.getMTUser(chatId);
+        if (null == user) {
+            return "You didn't start any topic yet. Please specify your mother tongue before doing so. Use /setlanguage command first.";
+        } else {
+            if (null == user.getCurrentTopic()) {
+                return "You didn't start any topic yet. Use /newtopic to start a new topic.";
+            }
+            String ret = user.getCurrentTopic();
+            user.setCurrentTopic(null);
+            return "You successfully closed " + ret + " topic.";
+        }
+    }
 }

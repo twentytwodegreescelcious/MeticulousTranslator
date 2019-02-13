@@ -13,6 +13,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.Upd
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -35,6 +36,9 @@ public class MeticulousTranslator implements CommandLineRunner {
 
     private Invoker invoker = new BotCommandExecutor();
     private static Logger logger = LoggerFactory.getLogger(MeticulousTranslator.class);
+
+    @Value("${predefined.availablelanguages}")
+    private String availableLanguages;
 
     @Autowired
     private UpdateService updateService;
@@ -94,7 +98,7 @@ public class MeticulousTranslator implements CommandLineRunner {
             throws IOException {
         if (text.contains("/" + greet)) {
             invoker.executeCommand(new GreetingsCommand(chatId, "Greetings to you, " +
-                    username)); // commandDao.greet(chatId, text);
+                    username)); // TODO transform Command patter to DAO pattern
         } else if (text.contains("/" + start)) {
             invoker.executeCommand(new StartCommand(chatId, defaultLanguage));
         } else if (text.contains("/" + translate)) {
@@ -103,6 +107,12 @@ public class MeticulousTranslator implements CommandLineRunner {
                             translationService.translate(text, defaultLanguage.substring(0, 2))));
         } else if (text.contains("/" + setlanguage)) {
             invoker.executeCommand(new AddCommand(chatId, userService.setLanguage(chatId, text)));
+        } else if (text.contains("/" + availablelanguages)) {
+            invoker.executeCommand(new GreetingsCommand(chatId, availableLanguages));
+        } else if (text.contains("/" + newtopic)) {
+            invoker.executeCommand(new GreetingsCommand(chatId, userService.newTopic(chatId, text.substring(10))));
+        } else if (text.contains("/" + closetopic)) {
+            invoker.executeCommand(new GreetingsCommand(chatId, userService.closeTopic(chatId)));
         }
     }
 
