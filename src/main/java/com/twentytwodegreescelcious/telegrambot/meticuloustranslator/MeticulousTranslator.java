@@ -103,7 +103,7 @@ public class MeticulousTranslator implements CommandLineRunner {
             throws IOException {
         if (text.contains(greet.value)) {
             invoker.executeCommand(new GreetingsCommand(chatId, "Greetings to you, " +
-                    username)); // TODO transform Command patter to DAO pattern
+                    username)); // TODO transform Command patter to DAO pattern 
         } else if (text.contains(start.value)) {
             invoker.executeCommand(new StartCommand(chatId, defaultLanguage));
         } else if (text.contains("/" + translate)) {
