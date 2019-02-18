@@ -27,27 +27,11 @@ public class WordPairServiceImpl implements WordPairService {
     @Autowired
     private UserService userService;
 
-    /**
-     * Provides with "CREATE" operation.
-     * The wordPair argument must contain certain fields defined before passing to this method.
-     *
-     * @param wordPair an object representing a database row for "WORD_PAIR" table that is attempting to be inserted.
-     * @return an object representing a database row for "WORD_PAIR" table that has just been inserted.
-     */
     @Override
     public WordPair createWordPair(WordPair wordPair) {
         return wordPairDao.save(wordPair);
     }
 
-    /**
-     * Provides with "CREATE" operation.
-     * The wordPair argument must contain certain fields defined before passing to this method.
-     *
-     * @param chatId   an integer value that corresponds to the Telegram chat id.
-     * @param wordPair an java.lang.String representing a database row for "WORD_PAIR" table
-     *                 that is attempting to be inserted.
-     * @return an object representing a database row for "WORD_PAIR" table that has just been inserted.
-     */
     @Override
     public String createWordPair(Integer chatId, String wordPair) {
         User user = userService.getMTUser(chatId);
@@ -84,13 +68,6 @@ public class WordPairServiceImpl implements WordPairService {
 
     }
 
-    /**
-     * Provides with "READ" operation.
-     * The integer argument must specify id of the word pair that is desired to be read.
-     *
-     * @param id integer value that corresponds to the word pair entity id.
-     * @return an object representing a database row for "WORD_PAIR" table that has just been read.
-     */
     @Override
     public WordPair getWordPair(Integer id) {
         if (wordPairDao.existsById(id)) {
@@ -98,60 +75,26 @@ public class WordPairServiceImpl implements WordPairService {
         } else return null;
     }
 
-    /**
-     * Provides with "UPDATE" operation.
-     * The wordPair object must contain the id value of the object that is being updated and the correct values
-     * of all the fields.
-     *
-     * @param wordPair represents a row in "WORD_PAIR" table that is attempting to be modified.
-     * @return an object representing a row in "WORD_PAIR" table that has been modified.
-     */
     @Override
     public WordPair editWordPair(WordPair wordPair) {
         return wordPairDao.save(wordPair);
     }
 
-    /**
-     * Provides with "DELETE" operation.
-     * The wordPair argument must contain a defined id field that corresponds to the id of the word pair
-     * that is desired to be deleted.
-     * @param wordPair an object representing a database row for "WORD_PAIR" table that is attempting to be deleted.
-     */
     @Override
     public void deleteWordPair(WordPair wordPair) {
         wordPairDao.delete(wordPair);
     }
 
-    /**
-     * Provides with "DELETE" operation.
-     * The wordPair argument must contain a defined id field that corresponds to the id of the word pair
-     * that is desired to be deleted.
-     * @param id an integer value representing a database row for "WORD_PAIR" table that is attempting to be deleted.
-     */
     @Override
     public void deleteWordPair(Integer id) {
         wordPairDao.deleteById(id);
     }
 
-    /**
-     * Provides with "READ" operation.
-     *
-     * @return a java.util.List of all the entities that are present in the database.
-     */
     @Override
     public List<WordPair> getAllWordPairs() {
         return wordPairDao.findAll();
     }
 
-    /**
-     * Provides with "READ" operation.
-     * Returns a java.lang.String representation of the word pairs that pertain the specified topic.
-     *
-     * @param topic a java.lang.String value that contains the name of a topic by which we attempt
-     *             to read the word pairs.
-     * @return A java.lang.String value that is designed to notify user about success/failure of current operation
-     *         execution <i>or</i> a character representation of the word pairs that pertain the specified topic.
-     */
     @Override
     public String findWordPairsByTopic(String topic) {
         String r = "";
@@ -172,21 +115,11 @@ public class WordPairServiceImpl implements WordPairService {
         return sb.toString();
     }
 
-    /**
-     * Counts the quantity of the rows that are present in the database.
-     *
-     * @return java.lang.Long value of the word pair entities in the database.
-     */
     @Override
     public Long countWordPairs() {
         return wordPairDao.count();
     }
 
-    /**
-     * Returns a java.util.List of java.lang.String that are the topics that a specified user created.
-     * @param user a User object which is used as a parameter to define the needed topics.
-     * @return A java.util.List of topics (represented as java.lang.String) which were created by the specified user.
-     */
     @Override
     public List<String> getTopics(User user) {
         List<WordPair> wordPairs = wordPairDao.findByUser(user);
@@ -199,11 +132,6 @@ public class WordPairServiceImpl implements WordPairService {
         return topicsList;
     }
 
-    /**
-     * Returns a java.util.List of java.lang.String that are the topics that a specified user created.
-     * @param chatId an integer value which is used as a parameter to define the needed topics.
-     * @return A java.util.List of topics (represented as java.lang.String) which were created by the specified user.
-     */
     @Override
     public List<String> getTopics(Integer chatId) {
         List<WordPair> wordPairs = wordPairDao.findByUser(userService.getMTUser(chatId));
