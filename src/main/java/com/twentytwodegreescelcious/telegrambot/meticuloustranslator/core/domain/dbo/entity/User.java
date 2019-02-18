@@ -7,7 +7,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "mt_user")
-public class MTUser {
+public class User {
 
     @Id
     @Column(name = "chat_id", nullable = false)
@@ -20,7 +20,7 @@ public class MTUser {
     private boolean isDictation = false;
 
 
-    public MTUser() {
+    public User() {
     }
 
     public Integer getId() {

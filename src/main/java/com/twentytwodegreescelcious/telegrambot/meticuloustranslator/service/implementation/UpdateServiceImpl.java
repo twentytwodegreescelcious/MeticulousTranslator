@@ -8,6 +8,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.net.HttpCli
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Singleton;
@@ -19,11 +20,12 @@ import java.util.List;
  * Created by twentytwodegreescelcious on 28.12.2018.
  */
 @Service
-@Singleton
 public class UpdateServiceImpl implements UpdateService {
 
     private Logger logger = LoggerFactory.getLogger(UpdateServiceImpl.class);
-    private static final String ENDPOINT = "https://api.telegram.org/";
+    
+    @Value("${meticuloustransaltor.endpoint}")
+    private String endpoint;
 
     @Override
     public void sendMessage(Integer chatId, String text) {
@@ -32,7 +34,7 @@ public class UpdateServiceImpl implements UpdateService {
 
     @Override
     public List<Result> getUpdates(String token, int offset) {
-        Response res = HttpClient.POST(ENDPOINT + token + "/getUpdates", new RequestedUpdateConfiguration(offset));
+        Response res = HttpClient.POST(endpoint + token + "/getUpdates", new RequestedUpdateConfiguration(offset));
         Update update = res.readEntity(Update.class);
         if (res.getStatus() == 200) {
             return update.getResults();

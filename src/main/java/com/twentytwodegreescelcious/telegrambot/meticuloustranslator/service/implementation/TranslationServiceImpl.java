@@ -22,7 +22,6 @@ import java.util.Locale;
  * Created by twentytwodegreescelcious on 1/8/2019.
  */
 @Service
-@Singleton
 public class TranslationServiceImpl implements TranslationService {
 
     private String word = "";

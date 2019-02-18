@@ -16,7 +16,7 @@ public class WordPair {
     private Integer id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_id")
-    private MTUser user;
+    private User user;
     @Column(name = "word", nullable = false)
     private String word;
     @Column(name = "translation", nullable = false)
@@ -35,11 +35,11 @@ public class WordPair {
         this.id = id;
     }
 
-    public MTUser getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(MTUser user) {
+    public void setUser(User user) {
         this.user = user;
     }
 

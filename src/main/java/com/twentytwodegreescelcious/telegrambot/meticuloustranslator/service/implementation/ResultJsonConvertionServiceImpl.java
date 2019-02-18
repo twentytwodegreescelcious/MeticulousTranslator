@@ -19,6 +19,7 @@ import java.util.List;
 /**
  * Created by twentytwodegreescelcious on 12/31/2018.
  */
+@Deprecated
 public class ResultJsonConvertionServiceImpl implements ResultJsonConvertionService {
 
     @Override

@@ -1,6 +1,6 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service;
 
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.MTUser;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.User;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.WordPair;
 
 import java.util.List;
@@ -16,8 +16,8 @@ public interface WordPairService {
     void deleteWordPair(WordPair wordPair);
     void deleteWordPair(Integer id);
     List<WordPair> getAllWordPairs();
-    String getWordPairsByTopic(String topic);
+    String findWordPairsByTopic(String topic);
     Long countWordPairs();
-    List<String> getTopics(MTUser mtUser);
+    List<String> getTopics(User user);
     List<String> getTopics(Integer chatId);
 }
