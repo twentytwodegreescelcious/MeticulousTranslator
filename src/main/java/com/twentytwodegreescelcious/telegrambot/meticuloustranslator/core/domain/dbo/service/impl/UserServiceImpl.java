@@ -8,10 +8,12 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.uti
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -20,6 +22,9 @@ import java.util.Optional;
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private MessageSource messageSource;
 
     Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -67,9 +72,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String setLanguage(Integer chatId, String text) {
+        User user;
         try {
             String language = Language.find(text.substring(12));
-            User user = this.getMTUser(chatId);
+            user = this.getMTUser(chatId);
             if (null == user) {
                 user = new User();
                 user.setId(chatId);
@@ -79,11 +85,11 @@ public class UserServiceImpl implements UserService {
                 user.setDefaultLanguage(language);
                 this.editMTUser(user);
             }
-
-            return "Your default language is successfully set to " + language;
+            return messageSource.getMessage("userserviceimpl.setlanguage.success", null,
+                    new Locale(user.getDefaultLanguage()));
         } catch (LanguageNotFoundException exc) {
             logger.error("User requested language that is not supported.");
-            return "The requested language does not seem to be supported, sorry.";
+            return messageSource.getMessage("userserviceimpl.setlanguage.notsupported", null, Locale.ENGLISH );
         }
     }
 
@@ -91,20 +97,14 @@ public class UserServiceImpl implements UserService {
     public String newTopic(Integer chatId, String text) {
         User user = this.getMTUser(chatId);
         if (null == user) {
-            return "You didn't specify your mother tongue. Use /setlanguage command first.";
+            return messageSource.getMessage("userserviceimpl.newtopic.nolangset", null, new Locale("en"));
         }
         if (null != user.getCurrentTopic()) {
-            return "You didn't close your previous topic which is " +
-                    user.getCurrentTopic() +
-                    ".\nPlease use /closetopic command to stop adding words related to this topic.";
+            return messageSource.getMessage("userserviceimpl.newtopic.notclosed", new Object[]{user.getCurrentTopic()},  new Locale(user.getDefaultLanguage()));
         }
         user.setCurrentTopic(text);
         this.editMTUser(user);
-        return "You successfully started a new topic." +
-                "\nUse /addpair to add a pair of words to this topic." +
-                "\nAll the words you add will be related to this topic." +
-                "\nAs soon as you are done with adding words to current topic" +
-                "use /closetopic command to stop adding words related to this topic.";
+        return messageSource.getMessage("userserviceimpl.newtopic.success", null, new Locale(user.getDefaultLanguage()));
 
     }
 
@@ -112,14 +112,14 @@ public class UserServiceImpl implements UserService {
     public String closeTopic(Integer chatId) {
         User user = this.getMTUser(chatId);
         if (null == user) {
-            return "You didn't start any topic yet. Please specify your mother tongue before doing so. Use /setlanguage command first.";
+            return messageSource.getMessage("userserviceimpl.closetopic.nolangset", null, new Locale("en"));
         }
         if (null == user.getCurrentTopic()) {
-            return "You didn't start any topic yet. Use /newtopic to start a new topic.";
+            return messageSource.getMessage("userserviceimpl.closetopic.notstarted", null, new Locale(user.getDefaultLanguage()));
         }
         String ret = user.getCurrentTopic();
         user.setCurrentTopic(null);
-        return "You successfully closed " + ret + " topic.";
+        return messageSource.getMessage("userserviceimpl.closetopic.success", new Object[]{ret}, new Locale(user.getDefaultLanguage()));
 
     }
 }

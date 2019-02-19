@@ -82,7 +82,7 @@ public interface WordPairService {
      * @return A java.lang.String value that is designed to notify user about success/failure of current operation
      *         execution <i>or</i> a character representation of the word pairs that pertain the specified topic.
      */
-    String findWordPairsByTopic(String topic);
+    String getWordPairs(String topic);
 
     /**
      * Counts the quantity of the rows that are present in the database.

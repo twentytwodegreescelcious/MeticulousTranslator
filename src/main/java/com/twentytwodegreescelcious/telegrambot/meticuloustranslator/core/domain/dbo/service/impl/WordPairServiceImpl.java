@@ -96,7 +96,7 @@ public class WordPairServiceImpl implements WordPairService {
     }
 
     @Override
-    public String findWordPairsByTopic(String topic) {
+    public String getWordPairs(String topic) {
         String r = "";
         StringBuilder sb;
         List<WordPair> wordPairs = wordPairDao.findByTopicIgnoreCase(topic);

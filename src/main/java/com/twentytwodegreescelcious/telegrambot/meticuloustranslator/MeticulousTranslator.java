@@ -124,7 +124,7 @@ public class MeticulousTranslator implements CommandLineRunner {
                     wordPairService.createWordPair(chatId, text.substring(addword.value.length()))));
         } else if (text.contains(getwordsfortopic.value)) {
             invoker.executeCommand(new GreetingsCommand(chatId,
-                    wordPairService.findWordPairsByTopic(text.substring(getwordsfortopic.value.length()).trim())));
+                    wordPairService.getWordPairs(text.substring(getwordsfortopic.value.length()).trim())));
         }
     }
 
