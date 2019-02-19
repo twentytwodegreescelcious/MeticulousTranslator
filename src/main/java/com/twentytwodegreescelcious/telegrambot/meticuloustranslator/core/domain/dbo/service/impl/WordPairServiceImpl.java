@@ -6,13 +6,11 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.UserService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.WordPairService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by twentytwodegreescelcious on 2/12/2019.
@@ -20,6 +18,9 @@ import java.util.Set;
 @Service
 @Transactional
 public class WordPairServiceImpl implements WordPairService {
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
     private WordPairDao wordPairDao;
@@ -38,19 +39,17 @@ public class WordPairServiceImpl implements WordPairService {
         if (null != user && null != user.getCurrentTopic()) {
             String[] wordAndTranslation = wordPair.split(" - ");
             if (wordAndTranslation.length > 2) {
-                return "For a reason we disallow to use '-' sign with spaces for any reason " +
-                        "except for separation of the word and translation.";
+                return messageSource.getMessage("wordserviceimpl.createwordpair.specialchar",
+                        null, new Locale(user.getDefaultLanguage()));
             } else if (wordAndTranslation.length < 2) {
-                return "I didn't save that. The correct format is: \"word - translation\"." +
-                        "\nExcuse me for these formalities, I'm just a bot after all." +
-                        "\nOne day I'll become intelligent..." +
-                        "\nTomorrow might be the day.";
+                return messageSource.getMessage("wordserviceimpl.createwordpair.incorrectformat",
+                        null, new Locale(user.getDefaultLanguage()));
             } else {
                 if (null != wordPairDao.findByWordAndTranslationAndTopicIgnoreCase(
                         wordAndTranslation[0], wordAndTranslation[1], user.getCurrentTopic())) {
-                    return "Word pair " + wordAndTranslation[0] +
-                            " (word) || " + wordAndTranslation[1] + " (translation) " +
-                            "already exists within " + user.getCurrentTopic() + " topic.";
+                    return messageSource.getMessage("wordserviceimpl.createwordpair.alreadyexists",
+                            new Object[]{wordAndTranslation[0], wordAndTranslation[1], user.getCurrentTopic()},
+                            new Locale(user.getDefaultLanguage()));
                 }
                 WordPair wp = new WordPair();
                 wp.setWord(wordAndTranslation[0]);
@@ -58,12 +57,13 @@ public class WordPairServiceImpl implements WordPairService {
                 wp.setUser(user);
                 wp.setTopic(user.getCurrentTopic());
                 wordPairDao.save(wp);
-                return "Word pair " + wordAndTranslation[0] + " (word) || " + wordAndTranslation[1] +
-                        " (translation) " + "has been successfully saved within the " + wp.getTopic() + " topic.";
+                return messageSource.getMessage("wordserviceimpl.createwordpair.success",
+                        new Object[]{wordAndTranslation[0], wordAndTranslation[1], wp.getTopic()},
+                        new Locale(user.getDefaultLanguage()));
             }
         } else {
-            return "You can't save word that are not related to any topic." +
-                    "\nYou are seeing this because didn't start any topic yet. Use /newtopic to start a new topic.";
+            return messageSource.getMessage("wordserviceimpl.createwordpair.notopic", null,
+                    (user == null) ? Locale.ENGLISH : new Locale(user.getDefaultLanguage()));
         }
 
     }
@@ -101,7 +101,8 @@ public class WordPairServiceImpl implements WordPairService {
         StringBuilder sb;
         List<WordPair> wordPairs = wordPairDao.findByTopicIgnoreCase(topic);
         if (wordPairs.isEmpty()) {
-            return "Sorry, but the requested topic " + topic + " is empty or does not exist.";
+            return messageSource.getMessage("wordserviceimpl.crgetwordpairs.doesnotexist", new Object[]{topic},
+                    Locale.ENGLISH);
         } else {
             r = "Showing word pairs for " + topic + " topic:\n";
              sb = new StringBuilder(r);
