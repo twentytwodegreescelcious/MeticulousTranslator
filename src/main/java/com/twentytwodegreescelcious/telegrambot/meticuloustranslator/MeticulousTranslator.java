@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.Command.*;
+import static com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.util.Command.*;
 
 /**
  * Created by twentytwodegreescelcious on 12/28/2018.
@@ -129,7 +129,6 @@ public class MeticulousTranslator implements CommandLineRunner {
     }
 
     public static void main(String[] args) {
-
         SpringApplication.run(MeticulousTranslator.class, args);
     }
 

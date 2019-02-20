@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -20,7 +22,7 @@ import java.util.Optional;
  * Created by twentytwodegreescelcious on 2/12/2019.
  */
 @Service
-@Transactional
+//@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -32,11 +34,13 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public User createMTUser(User user) {
         return userDao.save(user);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public User getMTUser(Integer id) {
         Optional<User> optional = userDao.findById(id);
         if (optional.isPresent()) {
@@ -46,31 +50,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public User editMTUser(User user) {
         return userDao.saveAndFlush(user);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteMTUser(User user) {
         userDao.delete(user);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteMTUser(Integer id) {
         userDao.deleteById(id);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<User> getAllMTUsers() {
         return userDao.findAll();
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Long countMTUsers() {
         return userDao.count();
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public String setLanguage(Integer chatId, String text) {
         User user;
         try {
@@ -89,18 +99,19 @@ public class UserServiceImpl implements UserService {
                     new Locale(user.getDefaultLanguage()));
         } catch (LanguageNotFoundException exc) {
             logger.error("User requested language that is not supported.");
-            return messageSource.getMessage("userserviceimpl.setlanguage.notsupported", null, Locale.ENGLISH );
+            return messageSource.getMessage("userserviceimpl.setlanguage.notsupported", null, Locale.ENGLISH);
         }
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public String newTopic(Integer chatId, String text) {
         User user = this.getMTUser(chatId);
         if (null == user) {
             return messageSource.getMessage("userserviceimpl.newtopic.nolangset", null, new Locale("en"));
         }
         if (null != user.getCurrentTopic()) {
-            return messageSource.getMessage("userserviceimpl.newtopic.notclosed", new Object[]{user.getCurrentTopic()},  new Locale(user.getDefaultLanguage()));
+            return messageSource.getMessage("userserviceimpl.newtopic.notclosed", new Object[]{user.getCurrentTopic()}, new Locale(user.getDefaultLanguage()));
         }
         user.setCurrentTopic(text);
         this.editMTUser(user);
@@ -109,6 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public String closeTopic(Integer chatId) {
         User user = this.getMTUser(chatId);
         if (null == user) {

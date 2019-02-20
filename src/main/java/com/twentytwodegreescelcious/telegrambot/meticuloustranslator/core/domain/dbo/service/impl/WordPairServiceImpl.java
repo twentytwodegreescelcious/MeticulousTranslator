@@ -8,15 +8,20 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 
 /**
  * Created by twentytwodegreescelcious on 2/12/2019.
  */
 @Service
-@Transactional
 public class WordPairServiceImpl implements WordPairService {
 
     @Autowired
@@ -29,11 +34,13 @@ public class WordPairServiceImpl implements WordPairService {
     private UserService userService;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public WordPair createWordPair(WordPair wordPair) {
         return wordPairDao.save(wordPair);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public String createWordPair(Integer chatId, String wordPair) {
         User user = userService.getMTUser(chatId);
         if (null != user && null != user.getCurrentTopic()) {
@@ -69,6 +76,7 @@ public class WordPairServiceImpl implements WordPairService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public WordPair getWordPair(Integer id) {
         if (wordPairDao.existsById(id)) {
             return wordPairDao.getOne(id);
@@ -76,26 +84,31 @@ public class WordPairServiceImpl implements WordPairService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public WordPair editWordPair(WordPair wordPair) {
         return wordPairDao.save(wordPair);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteWordPair(WordPair wordPair) {
         wordPairDao.delete(wordPair);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED)
     public void deleteWordPair(Integer id) {
         wordPairDao.deleteById(id);
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<WordPair> getAllWordPairs() {
         return wordPairDao.findAll();
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public String getWordPairs(String topic) {
         String r = "";
         StringBuilder sb;
@@ -117,11 +130,13 @@ public class WordPairServiceImpl implements WordPairService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public Long countWordPairs() {
         return wordPairDao.count();
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<String> getTopics(User user) {
         List<WordPair> wordPairs = wordPairDao.findByUser(user);
         Set<String> topics = new HashSet<>();
@@ -134,6 +149,7 @@ public class WordPairServiceImpl implements WordPairService {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<String> getTopics(Integer chatId) {
         List<WordPair> wordPairs = wordPairDao.findByUser(userService.getMTUser(chatId));
         Set<String> topics = new HashSet<>();

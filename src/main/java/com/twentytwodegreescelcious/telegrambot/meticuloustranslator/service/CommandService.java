@@ -5,6 +5,12 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service;
  */
 public interface CommandService {
 
+    /**
+     * Is a general method that sends response to the telegram user that requested perfoming some command.
+     *
+     * @param chatId telegram user chat id
+     * @param response message for the user
+     */
     void executeCommand(Integer chatId, String response);
 
 }

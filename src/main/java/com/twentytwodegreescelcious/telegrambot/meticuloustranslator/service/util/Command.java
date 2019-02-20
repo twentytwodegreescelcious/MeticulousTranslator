@@ -1,4 +1,4 @@
-package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command;
+package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.util;
 
 /**
  * Created by twentytwodegreescelcious on 1/24/2019.
