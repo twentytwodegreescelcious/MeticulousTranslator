@@ -7,6 +7,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 /**
  * Created by twentytwodegreescelcious on 1/8/2019.
  */
+@Deprecated
 public class TranslateCommand implements BotCommand {
     private UpdateService updateService;
     private int chatId;

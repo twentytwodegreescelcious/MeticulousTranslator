@@ -4,6 +4,7 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domai
  * Created by twentytwodegreescelcious on 1/2/2019.
  */
 
+@Deprecated
 @FunctionalInterface
 public interface BotCommand {
     void execute();

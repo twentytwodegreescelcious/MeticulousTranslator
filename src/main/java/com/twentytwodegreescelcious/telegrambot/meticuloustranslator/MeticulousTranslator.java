@@ -3,14 +3,13 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.Invoker;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.impl.*;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.User;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.UserService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.WordPairService;
-import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.DictationService;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.CommandService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.TranslationService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +17,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.MessageSource;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import static com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.command.Command.*;
 
@@ -33,7 +33,6 @@ import static com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core
 @SpringBootApplication
 public class MeticulousTranslator implements CommandLineRunner {
 
-    private Invoker invoker = new BotCommandExecutor();
     private static Logger logger = LoggerFactory.getLogger(MeticulousTranslator.class);
 
     @Value("${predefined.availablelanguages}")
@@ -46,10 +45,13 @@ public class MeticulousTranslator implements CommandLineRunner {
     private UpdateService updateService;
 
     @Autowired
-    private DictationService dictationService;
+    private CommandService commandService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MessageSource messageSource;
 
     @Autowired
     private WordPairService wordPairService;
@@ -68,7 +70,7 @@ public class MeticulousTranslator implements CommandLineRunner {
             } catch (UnirestException e) {
                 logger.error("Some other error", e);
             }
-            if (!results.isEmpty() || !results.equals(Collections.emptyList())) {
+            if (CollectionUtils.isNotEmpty(results)) {
                 lastUpdateId = (results.get(results.size() - 1).getUpdateId()) + 1;
                 processResults(results);
             }
@@ -101,30 +103,28 @@ public class MeticulousTranslator implements CommandLineRunner {
 
     private void parseAndExecuteCommand(String text, int chatId, String username, String defaultLanguage)
             throws IOException {
-        if (text.contains(greet.value)) {
-            invoker.executeCommand(new GreetingsCommand(chatId, "Greetings to you, " +
-                    username)); // TODO transform Command pattern to DAO pattern
-        } else if (text.contains(start.value)) {
-            invoker.executeCommand(new StartCommand(chatId, defaultLanguage));
-        } else if (text.contains("/" + translate)) {
-            invoker.executeCommand(
-                    new TranslateCommand(chatId,
-                            translationService.translate(text, defaultLanguage.substring(0, 2))));
-        } else if (text.contains(setlanguage.value)) {
-            invoker.executeCommand(new AddCommand(chatId, userService.setLanguage(chatId, text)));
-        } else if (text.contains(availablelanguages.value)) {
-            invoker.executeCommand(new GreetingsCommand(chatId, availableLanguages));
-        } else if (text.contains(newtopic.value)) {
-            invoker.executeCommand(new GreetingsCommand(chatId,
-                    userService.newTopic(chatId, text.substring(newtopic.value.length()).trim())));
-        } else if (text.contains(closetopic.value)) {
-            invoker.executeCommand(new GreetingsCommand(chatId, userService.closeTopic(chatId)));
-        } else if (text.contains(addword.value)) {
-            invoker.executeCommand(new GreetingsCommand(chatId,
-                    wordPairService.createWordPair(chatId, text.substring(addword.value.length()))));
-        } else if (text.contains(getwordsfortopic.value)) {
-            invoker.executeCommand(new GreetingsCommand(chatId,
-                    wordPairService.getWordPairs(text.substring(getwordsfortopic.value.length()).trim())));
+        if (text.startsWith(greet.value)) {
+            commandService.executeCommand(chatId, messageSource.getMessage("command.greetings",
+                    new Object[]{username}, new Locale(userService.getMTUser(chatId).getDefaultLanguage())));
+        } else if (text.startsWith(start.value)) {
+            commandService.executeCommand(chatId, messageSource.getMessage("command.start",
+                    null, new Locale(defaultLanguage)));
+        } else if (text.startsWith(translate.value)) {
+            commandService.executeCommand(chatId, translationService.translate(text, defaultLanguage.substring(0, 2)));
+        } else if (text.startsWith(setlanguage.value)) {
+            commandService.executeCommand(chatId, userService.setLanguage(chatId, text.substring(12)));
+        } else if (text.startsWith(availablelanguages.value)) {
+            commandService.executeCommand(chatId, availableLanguages);
+        } else if (text.startsWith(newtopic.value)) {
+            commandService.executeCommand(chatId, userService.newTopic(chatId,
+                    text.substring(newtopic.value.length()).trim()));
+        } else if (text.startsWith(closetopic.value)) {
+            commandService.executeCommand(chatId, userService.closeTopic(chatId));
+        } else if (text.startsWith(addword.value)) {
+            commandService.executeCommand(chatId, wordPairService.createWordPair(chatId,
+                    text.substring(addword.value.length())));
+        } else if (text.startsWith(getwordsfortopic.value)) {
+            commandService.executeCommand(chatId, wordPairService.getWordPairs(text.substring(getwordsfortopic.value.length()).trim()));
         }
     }
 

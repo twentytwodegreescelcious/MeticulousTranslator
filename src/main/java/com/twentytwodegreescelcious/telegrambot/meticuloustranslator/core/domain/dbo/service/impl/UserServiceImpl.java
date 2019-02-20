@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
     public String setLanguage(Integer chatId, String text) {
         User user;
         try {
-            String language = Language.find(text.substring(12));
+            String language = Language.find(text);
             user = this.getMTUser(chatId);
             if (null == user) {
                 user = new User();

@@ -7,6 +7,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.imp
 /**
  * Created by twentytwodegreescelcious on 2/7/2019.
  */
+@Deprecated
 public class AddCommand implements BotCommand {
 
     private UpdateService updateService;

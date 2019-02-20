@@ -6,6 +6,7 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 /**
  * Created by twentytwodegreescelcious on 1/2/2019.
  */
+@Deprecated
 public class BotCommandExecutor implements Invoker {
 
     @Override
