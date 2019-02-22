@@ -1,6 +1,7 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by twentytwodegreescelcious on 2/6/2019.
@@ -23,6 +24,13 @@ public class WordPair {
     private String translation;
     @Column(name = "topic", nullable = false)
     private String topic;
+    @Column(name="last_checked")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastChecked = new Date();
+    @Column(name="was_correct")
+    private Boolean wasCorrect = true;
+    @Column(name="times_incorrect")
+    private Integer timesIncorrect = 0;
 
     public WordPair() {
     }
@@ -65,5 +73,29 @@ public class WordPair {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public Date getLastChecked() {
+        return lastChecked;
+    }
+
+    public void setLastChecked(Date lastChecked) {
+        this.lastChecked = lastChecked;
+    }
+
+    public Boolean getWasCorrect() {
+        return wasCorrect;
+    }
+
+    public void setWasCorrect(Boolean wasCorrect) {
+        this.wasCorrect = wasCorrect;
+    }
+
+    public Integer getTimesIncorrect() {
+        return timesIncorrect;
+    }
+
+    public void setTimesIncorrect(Integer timesIncorrect) {
+        this.timesIncorrect = timesIncorrect;
     }
 }
