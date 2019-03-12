@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +22,7 @@ import java.util.List;
 public class UpdateServiceImpl implements UpdateService {
 
     private Logger logger = LoggerFactory.getLogger(UpdateServiceImpl.class);
-    
+
     @Value("${meticuloustransaltor.endpoint}")
     private String endpoint;
 
@@ -38,9 +37,8 @@ public class UpdateServiceImpl implements UpdateService {
         Update update = res.readEntity(Update.class);
         if (res.getStatus() == 200) {
             return update.getResults();
-        } else {
-            logger.error("Getting updates failed, status: " + res.getStatus());
         }
+        logger.debug(String.format("Getting updates failed, status: %d", res.getStatus()));
         return Collections.emptyList();
     }
 

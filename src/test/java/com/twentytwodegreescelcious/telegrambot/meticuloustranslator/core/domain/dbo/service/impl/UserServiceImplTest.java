@@ -4,6 +4,8 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.User;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.UserService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.util.Language;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.util.LanguageNotFoundException;
+import org.apache.commons.codec.language.bm.Lang;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,26 +16,32 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.MessageSource;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(Optional.class)
 public class UserServiceImplTest {
 
     @InjectMocks
-    UserServiceImpl userService;
+    private UserServiceImpl userService;
 
     @Mock
     private UserDao userDao;
@@ -121,19 +129,22 @@ public class UserServiceImplTest {
 
     @Test
     @Ignore
-    public void setLanguageToAnExistingUser() {
-
-        when(userService.getMTUser(anyInt())).thenReturn(new User());
-
-
-
-        verify(userService, times(1)).getMTUser(anyInt());
-        verify(messageSource, times(1)).getMessage(anyString(), anyObject(), anyObject());
-        verify(userService, times(1)).editMTUser(anyObject());
+    public void setLanguageToAnExistingUser() throws LanguageNotFoundException {
+//        Language language = new Language("something");
+//
+//        when(language.find(anyString())).thenReturn("uk");
+//        when(userService.getMTUser(anyInt())).thenReturn(new User());
+//
+//
+//
+//        verify(userService, times(1)).getMTUser(anyInt());
+//        verify(messageSource, times(1)).getMessage(anyString(), anyObject(), anyObject());
+//        verify(userService, times(1)).editMTUser(anyObject());
     }
 
-//    @Test
-//    public void setLanguageToNonExistingUser() {
+    @Test
+    @Ignore
+    public void setLanguageToNonExistingUser() {
 //        UserService userService = mock(UserServiceImpl.class);
 //
 //        when(userService.getMTUser(anyInt())).thenReturn(null);
@@ -141,20 +152,28 @@ public class UserServiceImplTest {
 //        verify(userService, times(1)).getMTUser(anyInt());
 //        verify(messageSource, times(1)).getMessage(anyString(), anyObject(), anyObject());
 //        verify(userService, times(1)).createMTUser(anyObject());
-//    }
-//
-//    @Test
-//    public void newTopicToAnExistingUserWithNoTopicSet() {
-//        UserService userService = mock(UserServiceImpl.class);
-//        User user = mock(User.class);
-//
-//        when(userService.getMTUser(anyInt())).thenReturn(user);
-//
-//        verify(user, times(1)).setCurrentTopic(anyString());
-//        verify(userService, times(1)).editMTUser(user);
-//        verify(messageSource, times(1)).getMessage(anyString(), anyObject(), anyObject());
-//
-//    }
+    }
+
+    @Test
+    @Ignore
+    public void newTopicToAnExistingUserWithNoTopicSet() {
+        User user = new User();
+        Optional<User> userOptional = Optional.of(user);
+//        Optional<User> mock = mock(Optional.class);
+
+
+//        doReturn(user).when(userService).getMTUser(anyInt());
+        when(userService.getMTUser(anyInt())).thenReturn(user);
+        when(userDao.findById(anyInt())).thenReturn(Optional.of(user));
+        given(userOptional.isPresent()).willReturn(true);
+
+//        when(userOptional.isPresent()).thenReturn(true);
+
+        verify(user, times(1)).setCurrentTopic(anyString());
+        verify(userService, times(1)).editMTUser(user);
+        verify(messageSource, times(1)).getMessage(anyString(), anyObject(), anyObject());
+
+    }
 //
 //    @Test
 //    public void newTopicToAnExistingUserWithATopicSet() {
