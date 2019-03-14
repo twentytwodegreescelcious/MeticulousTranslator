@@ -80,7 +80,8 @@ public class WordPairServiceImpl implements WordPairService {
     public WordPair getWordPair(Integer id) {
         if (wordPairDao.existsById(id)) {
             return wordPairDao.getOne(id);
-        } else return null;
+        }
+        return null;
     }
 
     @Override
