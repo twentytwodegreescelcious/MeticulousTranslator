@@ -79,4 +79,11 @@ public class WordPair {
         this.topic = topic;
     }
 
+    public WordPairQuizInfo getWordPairQuizInfo() {
+        return wordPairQuizInfo;
+    }
+
+    public void setWordPairQuizInfo(WordPairQuizInfo wordPairQuizInfo) {
+        this.wordPairQuizInfo = wordPairQuizInfo;
+    }
 }

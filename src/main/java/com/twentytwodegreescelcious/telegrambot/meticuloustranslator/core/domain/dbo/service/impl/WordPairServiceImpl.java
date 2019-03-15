@@ -3,7 +3,9 @@ package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domai
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dao.WordPairDao;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.User;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.WordPair;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.WordPairQuizInfo;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.UserService;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.WordPairQuizInfoService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.WordPairService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -32,6 +34,9 @@ public class WordPairServiceImpl implements WordPairService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private WordPairQuizInfoService wordPairQuizInfoService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -63,6 +68,7 @@ public class WordPairServiceImpl implements WordPairService {
                 wp.setTranslation(wordAndTranslation[1]);
                 wp.setUser(user);
                 wp.setTopic(user.getCurrentTopic());
+                wp.setWordPairQuizInfo(wordPairQuizInfoService.createWordPairQuizInfo(new WordPairQuizInfo()));
                 wordPairDao.save(wp);
                 return messageSource.getMessage("wordserviceimpl.createwordpair.success",
                         new Object[]{wordAndTranslation[0], wordAndTranslation[1], wp.getTopic()},
