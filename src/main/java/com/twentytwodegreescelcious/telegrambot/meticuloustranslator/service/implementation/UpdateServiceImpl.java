@@ -23,7 +23,7 @@ public class UpdateServiceImpl implements UpdateService {
 
     private Logger logger = LoggerFactory.getLogger(UpdateServiceImpl.class);
 
-    @Value("${meticuloustransaltor.endpoint}")
+    @Value("${meticuloustranslator.endpoint}")
     private String endpoint;
 
     @Override

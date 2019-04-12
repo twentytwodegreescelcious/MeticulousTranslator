@@ -39,6 +39,14 @@ public class WordPair {
     public WordPair() {
     }
 
+    public WordPair(User user, String word, String translation, String topic, WordPairQuizInfo wordPairQuizInfo) {
+        this.user = user;
+        this.word = word;
+        this.translation = translation;
+        this.topic = topic;
+        this.wordPairQuizInfo = wordPairQuizInfo;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -89,7 +89,7 @@ public class MeticulousTranslator implements CommandLineRunner {
             int chatId = r.getMessage().getChat().getId();
             String username = r.getMessage().getFrom().getUsername();
             String defaultLanguage = r.getMessage().getFrom().getLanguageCode();
-            User user = userService.getMTUser(chatId);
+            User user = userService.getUser(chatId);
             if (null != user) {
                 defaultLanguage = user.getDefaultLanguage();
             }
@@ -105,7 +105,7 @@ public class MeticulousTranslator implements CommandLineRunner {
             throws IOException {
         if (text.startsWith(greet.value)) {
             commandService.executeCommand(chatId, messageSource.getMessage("command.greetings",
-                    new Object[]{username}, new Locale(userService.getMTUser(chatId).getDefaultLanguage())));
+                    new Object[]{username}, new Locale(userService.getUser(chatId).getDefaultLanguage())));
         } else if (text.startsWith(start.value)) {
             commandService.executeCommand(chatId, messageSource.getMessage("command.start",
                     null, new Locale(defaultLanguage)));

@@ -47,7 +47,7 @@ public class WordPairServiceImpl implements WordPairService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public String createWordPair(Integer chatId, String wordPair) {
-        User user = userService.getMTUser(chatId);
+        User user = userService.getUser(chatId);
         if (null != user && null != user.getCurrentTopic()) {
             String[] wordAndTranslation = wordPair.split(" - ");
             if (wordAndTranslation.length > 2) {
@@ -63,12 +63,8 @@ public class WordPairServiceImpl implements WordPairService {
                             new Object[]{wordAndTranslation[0], wordAndTranslation[1], user.getCurrentTopic()},
                             new Locale(user.getDefaultLanguage()));
                 }
-                WordPair wp = new WordPair();
-                wp.setWord(wordAndTranslation[0]);
-                wp.setTranslation(wordAndTranslation[1]);
-                wp.setUser(user);
-                wp.setTopic(user.getCurrentTopic());
-                wp.setWordPairQuizInfo(wordPairQuizInfoService.createWordPairQuizInfo(new WordPairQuizInfo()));
+                WordPair wp = new WordPair(user, wordAndTranslation[0], wordAndTranslation[1], user.getCurrentTopic(),
+                        wordPairQuizInfoService.createWordPairQuizInfo(new WordPairQuizInfo()));
                 wordPairDao.save(wp);
                 return messageSource.getMessage("wordserviceimpl.createwordpair.success",
                         new Object[]{wordAndTranslation[0], wordAndTranslation[1], wp.getTopic()},
@@ -117,7 +113,7 @@ public class WordPairServiceImpl implements WordPairService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public String getWordPairs(String topic) {
-        String r = "";
+        String r;
         StringBuilder sb;
         List<WordPair> wordPairs = wordPairDao.findByTopicIgnoreCase(topic);
         if (wordPairs.isEmpty()) {
@@ -130,7 +126,7 @@ public class WordPairServiceImpl implements WordPairService {
                 sb.append(wp.getWord());
                 sb.append(" || ");
                 sb.append(wp.getTranslation());
-                sb.append("\n\n");
+                sb.append("\n");
             }
         }
         return sb.toString();
@@ -158,7 +154,7 @@ public class WordPairServiceImpl implements WordPairService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<String> getTopics(Integer chatId) {
-        List<WordPair> wordPairs = wordPairDao.findByUser(userService.getMTUser(chatId));
+        List<WordPair> wordPairs = wordPairDao.findByUser(userService.getUser(chatId));
         Set<String> topics = new HashSet<>();
         for (WordPair wp : wordPairs) {
             topics.add(wp.getTopic().trim());

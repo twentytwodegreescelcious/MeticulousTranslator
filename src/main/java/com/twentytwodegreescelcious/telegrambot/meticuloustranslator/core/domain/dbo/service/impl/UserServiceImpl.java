@@ -22,7 +22,6 @@ import java.util.Optional;
  * Created by twentytwodegreescelcious on 2/12/2019.
  */
 @Service
-//@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -35,13 +34,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public User createMTUser(User user) {
+    public User createUser(User user) {
         return userDao.save(user);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public User getMTUser(Integer id) {
+    public User getUser(Integer id) {
         Optional<User> optional = userDao.findById(id);
         if (optional.isPresent()) {
             return optional.get();
@@ -51,31 +50,31 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public User editMTUser(User user) {
+    public User editUser(User user) {
         return userDao.saveAndFlush(user);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void deleteMTUser(User user) {
+    public void deleteUser(User user) {
         userDao.delete(user);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void deleteMTUser(Integer id) {
+    public void deleteUser(Integer id) {
         userDao.deleteById(id);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public List<User> getAllMTUsers() {
+    public List<User> getAllUsers() {
         return userDao.findAll();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
-    public Long countMTUsers() {
+    public Long countUsers() {
         return userDao.count();
     }
 
@@ -85,15 +84,15 @@ public class UserServiceImpl implements UserService {
         User user;
         try {
             String language = Language.find(text);
-            user = this.getMTUser(chatId);
+            user = this.getUser(chatId);
             if (null == user) {
                 user = new User();
                 user.setId(chatId);
                 user.setDefaultLanguage(language);
-                this.createMTUser(user);
+                this.createUser(user);
             } else {
                 user.setDefaultLanguage(language);
-                this.editMTUser(user);
+                this.editUser(user);
             }
             return messageSource.getMessage("userserviceimpl.setlanguage.success", null,
                     new Locale(user.getDefaultLanguage()));
@@ -106,7 +105,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public String newTopic(Integer chatId, String text) {
-        User user = this.getMTUser(chatId);
+        User user = this.getUser(chatId);
         if (null == user) {
             return messageSource.getMessage("userserviceimpl.newtopic.nolangset", null, new Locale("en"));
         }
@@ -114,7 +113,7 @@ public class UserServiceImpl implements UserService {
             return messageSource.getMessage("userserviceimpl.newtopic.notclosed", new Object[]{user.getCurrentTopic()}, new Locale(user.getDefaultLanguage()));
         }
         user.setCurrentTopic(text);
-        this.editMTUser(user);
+        this.editUser(user);
         return messageSource.getMessage("userserviceimpl.newtopic.success", null, new Locale(user.getDefaultLanguage()));
 
     }
@@ -122,7 +121,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public String closeTopic(Integer chatId) {
-        User user = this.getMTUser(chatId);
+        User user = this.getUser(chatId);
         if (null == user) {
             return messageSource.getMessage("userserviceimpl.closetopic.nolangset", null, new Locale("en"));
         }

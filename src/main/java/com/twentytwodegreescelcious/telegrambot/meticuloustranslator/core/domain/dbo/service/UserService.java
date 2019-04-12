@@ -16,7 +16,7 @@ public interface UserService {
      * @param user an object representing a database row for "MT_USER" table that is attempting to be inserted.
      * @return an object representing a database row for "MT_USER" table that has just been inserted.
      */
-    User createMTUser(User user);
+    User createUser(User user);
 
     /**
      * Provides with "READ" operation.
@@ -25,7 +25,7 @@ public interface UserService {
      * @param id integer value that corresponds to the Telegram chat id.
      * @return an object representing a database row for "MT_USER" table that has just been read.
      */
-    User getMTUser(Integer id);
+    User getUser(Integer id);
 
     /**
      * Provides with "UPDATE" operation.
@@ -35,7 +35,7 @@ public interface UserService {
      * @param user an object representing an updated version of the object that is attempting to be updated.
      * @return an object representing a database row for "MT_USER" table that has just be updated.
      */
-    User editMTUser(User user);
+    User editUser(User user);
 
     /**
      * Provides with "DELETE" operation.
@@ -43,7 +43,7 @@ public interface UserService {
      * that is desired to be deleted.
      * @param user an object representing a database row for "MT_USER" table that is attempting to be deleted.
      */
-    void deleteMTUser(User user);
+    void deleteUser(User user);
 
     /**
      * Provides with "DELETE" operation.
@@ -51,21 +51,21 @@ public interface UserService {
      * that is desired to be deleted.
      * @param id An integer value that specifies a database row for "MT_USER" table that is attempting to be deleted.
      */
-    void deleteMTUser(Integer id);
+    void deleteUser(Integer id);
 
     /**
      * An operation that returns the java.util.List of all users that are present in the database.
      *
      * @return java.util.List of users.
      */
-    List<User> getAllMTUsers();
+    List<User> getAllUsers();
 
     /**
      * An operation that returns the quantity of users that are present in the database.
      *
      * @return java.lang.Long value that corresponds to the quantity of entities that are present in the database
      */
-    Long countMTUsers();
+    Long countUsers();
 
     /**
      * Provides with an "UPDATE" operation on a language column in a row of "MT_USER" table with an appropriate chat id.

@@ -50,7 +50,7 @@ public class UserServiceImplTest {
 
         when(userDao.save(anyObject())).thenReturn(user);
 
-        userService.createMTUser(user);
+        userService.createUser(user);
 
         verify(userDao, times(1)).save(user);
     }
@@ -61,7 +61,7 @@ public class UserServiceImplTest {
 
         when(userDao.findById(anyInt())).thenReturn(Optional.of(user));
 
-        userService.getMTUser(anyInt());
+        userService.getUser(anyInt());
 
         verify(userDao, times(1)).findById(anyInt());
     }
@@ -72,7 +72,7 @@ public class UserServiceImplTest {
 
         when(userDao.saveAndFlush(anyObject())).thenReturn(user);
 
-        userService.editMTUser(user);
+        userService.editUser(user);
 
         verify(userDao, times(1)).saveAndFlush(anyObject());
     }
@@ -81,7 +81,7 @@ public class UserServiceImplTest {
     public void deleteMTUser() {
         User user = new User();
 
-        userService.deleteMTUser(user);
+        userService.deleteUser(user);
 
         verify(userDao, times(1)).delete(anyObject());
     }
@@ -90,7 +90,7 @@ public class UserServiceImplTest {
     public void deleteMTUser1() {
         Integer id = 0;
 
-        userService.deleteMTUser(id);
+        userService.deleteUser(id);
 
         verify(userDao, times(1)).deleteById(anyInt());
     }
@@ -101,7 +101,7 @@ public class UserServiceImplTest {
 
         when(userDao.findAll()).thenReturn(users);
 
-        userService.getAllMTUsers();
+        userService.getAllUsers();
 
         verify(userDao, times(1)).findAll();
     }
@@ -112,7 +112,7 @@ public class UserServiceImplTest {
 
         when(userDao.count()).thenReturn(counter);
 
-        userService.countMTUsers();
+        userService.countUsers();
 
         verify(userDao, times(1)).count();
     }
@@ -123,13 +123,13 @@ public class UserServiceImplTest {
 //        Language language = new Language("something");
 //
 //        when(language.find(anyString())).thenReturn("uk");
-//        when(userService.getMTUser(anyInt())).thenReturn(new User());
+//        when(userService.getUser(anyInt())).thenReturn(new User());
 //
 //
 //
-//        verify(userService, times(1)).getMTUser(anyInt());
+//        verify(userService, times(1)).getUser(anyInt());
 //        verify(messageSource, times(1)).getMessage(anyString(), anyObject(), anyObject());
-//        verify(userService, times(1)).editMTUser(anyObject());
+//        verify(userService, times(1)).editUser(anyObject());
     }
 
     @Test
@@ -137,11 +137,11 @@ public class UserServiceImplTest {
     public void setLanguageToNonExistingUser() {
 //        UserService userService = mock(UserServiceImpl.class);
 //
-//        when(userService.getMTUser(anyInt())).thenReturn(null);
+//        when(userService.getUser(anyInt())).thenReturn(null);
 //
-//        verify(userService, times(1)).getMTUser(anyInt());
+//        verify(userService, times(1)).getUser(anyInt());
 //        verify(messageSource, times(1)).getMessage(anyString(), anyObject(), anyObject());
-//        verify(userService, times(1)).createMTUser(anyObject());
+//        verify(userService, times(1)).createUser(anyObject());
     }
 
     @Test
@@ -152,15 +152,15 @@ public class UserServiceImplTest {
 //        Optional<User> mock = mock(Optional.class);
 
 
-//        doReturn(user).when(userService).getMTUser(anyInt());
-        when(userService.getMTUser(anyInt())).thenReturn(user);
+//        doReturn(user).when(userService).getUser(anyInt());
+        when(userService.getUser(anyInt())).thenReturn(user);
         when(userDao.findById(anyInt())).thenReturn(Optional.of(user));
         given(userOptional.isPresent()).willReturn(true);
 
 //        when(userOptional.isPresent()).thenReturn(true);
 
         verify(user, times(1)).setCurrentTopic(anyString());
-        verify(userService, times(1)).editMTUser(user);
+        verify(userService, times(1)).editUser(user);
         verify(messageSource, times(1)).getMessage(anyString(), anyObject(), anyObject());
 
     }
@@ -171,7 +171,7 @@ public class UserServiceImplTest {
 //        User user = mock(User.class);
 //        user.setCurrentTopic(anyString());
 //
-//        when(userService.getMTUser(anyInt())).thenReturn(user);
+//        when(userService.getUser(anyInt())).thenReturn(user);
 //
 //        verify(messageSource, times(1)).getMessage(anyString(), eq(null), anyObject());
 //    }
@@ -180,7 +180,7 @@ public class UserServiceImplTest {
 //    public void newTopicToANonExistingUser() {
 //        UserService userService = mock(UserServiceImpl.class);
 //
-//        when(userService.getMTUser(anyInt())).thenReturn(null);
+//        when(userService.getUser(anyInt())).thenReturn(null);
 //
 //        verify(messageSource, times(1)).getMessage(anyString(), eq(null), anyObject());
 //    }
@@ -191,7 +191,7 @@ public class UserServiceImplTest {
 //        User user = mock(User.class);
 //        user.setCurrentTopic(anyString());
 //
-//        when(userService.getMTUser(anyInt())).thenReturn(user);
+//        when(userService.getUser(anyInt())).thenReturn(user);
 //
 //        verify(user, times(1)).getCurrentTopic();
 //        verify(user, times(1)).setCurrentTopic(null);
@@ -202,7 +202,7 @@ public class UserServiceImplTest {
 //    public void closeTopicToAnExistingUserWithNoTopicSet() {
 //        UserService userService = mock(UserServiceImpl.class);
 //        User user = mock(User.class);
-//        when(userService.getMTUser(anyInt())).thenReturn(user);
+//        when(userService.getUser(anyInt())).thenReturn(user);
 //
 //        verify(messageSource, times(1)).getMessage(anyString(), eq(null), anyObject());
 //    }
@@ -211,7 +211,7 @@ public class UserServiceImplTest {
 //    public void closeTopicToANonExistingUser() {
 //        UserService userService = mock(UserServiceImpl.class);
 //
-//        when(userService.getMTUser(anyInt())).thenReturn(null);
+//        when(userService.getUser(anyInt())).thenReturn(null);
 //
 //        verify(messageSource, times(1)).getMessage(anyString(), eq(null), anyObject());
 //    }

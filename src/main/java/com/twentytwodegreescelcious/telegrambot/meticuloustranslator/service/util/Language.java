@@ -30,22 +30,22 @@ public enum Language {
     }
 
     public static String find(String requested) throws LanguageNotFoundException {
-        if (requested.trim().equalsIgnoreCase(ENGLISH.name().trim())) {
+        requested = requested.trim();
+        if (ENGLISH.name().equalsIgnoreCase(requested)) {
             return ENGLISH.value;
-        } else if (requested.trim().equalsIgnoreCase(RUSSIAN.name().trim()) ||
-                requested.trim().equalsIgnoreCase(РУССКИЙ.name().trim())) {
+        } else if (RUSSIAN.name().equalsIgnoreCase(requested) ||
+                РУССКИЙ.name().equalsIgnoreCase(requested)) {
             return RUSSIAN.value;
-        } else if (requested.trim().equalsIgnoreCase(UKRAINIAN.name().trim()) ||
-                requested.trim().trim().equalsIgnoreCase(УКРАЇНСЬКА.name().trim())) {
+        } else if (UKRAINIAN.name().equalsIgnoreCase(requested) ||
+                УКРАЇНСЬКА.name().equalsIgnoreCase(requested)) {
             return UKRAINIAN.value;
-        } else if (requested.trim().equalsIgnoreCase(DEUTSCH.name().trim()) ||
-                requested.trim().equalsIgnoreCase(GERMAN.name().trim())) {
+        } else if (DEUTSCH.name().equalsIgnoreCase(requested) ||
+                GERMAN.name().equalsIgnoreCase(requested)) {
             return GERMAN.value;
-        } else if (requested.trim().equalsIgnoreCase(FRENCH.name().trim()) ||
-                requested.trim().equalsIgnoreCase(FRANÇAISE.name().trim())) {
+        } else if (FRENCH.name().equalsIgnoreCase(requested) ||
+                FRANÇAISE.name().equalsIgnoreCase(requested)) {
             return FRENCH.value;
-        } else {
-            throw new LanguageNotFoundException();
         }
+        throw new LanguageNotFoundException();
     }
 }
