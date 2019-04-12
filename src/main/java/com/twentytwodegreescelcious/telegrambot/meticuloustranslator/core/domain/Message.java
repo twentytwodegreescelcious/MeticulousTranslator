@@ -1,5 +1,6 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -24,6 +25,12 @@ public class Message {
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonProperty(value = "entities")
     private Object entities;
+    @JsonIgnoreProperties
+    @JsonProperty(value = "forward_from")
+    private Object forwardFrom;
+    @JsonIgnoreProperties
+    @JsonProperty(value = "forward_date")
+    private Object forwardDate;
 
     public int getMessageId() {
         return messageId;
@@ -63,5 +70,29 @@ public class Message {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Object getEntities() {
+        return entities;
+    }
+
+    public void setEntities(Object entities) {
+        this.entities = entities;
+    }
+
+    public Object getForwardFrom() {
+        return forwardFrom;
+    }
+
+    public void setForwardFrom(Object forwardFrom) {
+        this.forwardFrom = forwardFrom;
+    }
+
+    public Object getForwardDate() {
+        return forwardDate;
+    }
+
+    public void setForwardDate(Object forwardDate) {
+        this.forwardDate = forwardDate;
     }
 }

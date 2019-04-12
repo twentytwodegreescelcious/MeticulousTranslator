@@ -1,5 +1,6 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.implementation;
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.BotMessage;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.RequestedUpdateConfiguration;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.Result;

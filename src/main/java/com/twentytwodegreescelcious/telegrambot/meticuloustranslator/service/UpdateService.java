@@ -12,6 +12,6 @@ import java.util.List;
 public interface UpdateService {
 
     void sendMessage(Integer chatId, String text);
-    List<Result> getUpdates(String token, int offset) throws UnirestException;
+    List<Result> getUpdates(String token, int offset);
 
 }

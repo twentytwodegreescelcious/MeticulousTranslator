@@ -19,6 +19,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.MessageSource;
 
+import javax.ws.rs.ProcessingException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,11 +66,7 @@ public class MeticulousTranslator implements CommandLineRunner {
         int lastUpdateId = 0;
         List<Result> results = new ArrayList<>();
         while (true) {
-            try {
-                results = updateService.getUpdates(this.token, lastUpdateId++);
-            } catch (UnirestException e) {
-                logger.error("Some other error", e);
-            }
+            results = updateService.getUpdates(this.token, lastUpdateId++);
             if (CollectionUtils.isNotEmpty(results)) {
                 lastUpdateId = (results.get(results.size() - 1).getUpdateId()) + 1;
                 processResults(results);

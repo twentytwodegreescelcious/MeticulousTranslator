@@ -10,8 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class BotMessage {
 
-    @Value("meticuloustranslator.resource")
-    private String telegramResource;
+    private String telegramResource  = "https://api.telegram.org/bot768358876:AAERZhiezrmKkg0m6B8fDy3il0ry4KIflZk";
 
     @JsonProperty(value = "chat_id")
     private final int chatId;
