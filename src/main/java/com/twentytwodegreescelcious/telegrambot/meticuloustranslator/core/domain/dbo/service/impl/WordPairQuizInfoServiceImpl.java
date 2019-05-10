@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * Created by twentytwodegreescelcious on 3/14/2019.
  */
@@ -48,5 +50,25 @@ public class WordPairQuizInfoServiceImpl implements WordPairQuizInfoService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteWordPairQuizInfo(WordPairQuizInfo wordPairQuizInfo) {
         wordPairQuizInfoDao.delete(wordPairQuizInfo);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public WordPairQuizInfo addToQuiz(WordPairQuizInfo wordPairQuizInfo) {
+        Optional<WordPairQuizInfo> wpqi = wordPairQuizInfoDao.findById(wordPairQuizInfo.getId());
+        if (wpqi.isPresent()) {
+            return wpqi.get();
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public WordPairQuizInfo addToQuiz(Integer id) {
+        Optional<WordPairQuizInfo> wpqi = wordPairQuizInfoDao.findById(id);
+        if (wpqi.isPresent()) {
+            return wpqi.get();
+        }
+        return null;
     }
 }

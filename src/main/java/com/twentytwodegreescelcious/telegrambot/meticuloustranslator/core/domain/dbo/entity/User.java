@@ -18,6 +18,8 @@ public class User {
     private String currentTopic;
     @Column(name="is_dictation")
     private boolean isDictation = false;
+    @Column(name = "dictation_topic")
+    private String dictationTopic;
 
 
     public User() {
@@ -53,5 +55,13 @@ public class User {
 
     public void setDictation(boolean dictation) {
         isDictation = dictation;
+    }
+
+    public String getDictationTopic() {
+        return dictationTopic;
+    }
+
+    public void setDictationTopic(String dictationTopic) {
+        this.dictationTopic = dictationTopic;
     }
 }

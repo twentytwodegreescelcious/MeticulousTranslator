@@ -103,4 +103,13 @@ public interface UserService {
      *         execution.
      */
     String closeTopic(Integer chatId);
+
+
+    /**
+     * Generates a quiz on a topic with a given name.
+     * @param topic a String which specifies a name of a topic to start topic with.
+     * @return a String that contains a message about quiz start status and a first WordPair of the quiz if the
+     * initiation of a quiz was successful.
+     */
+    String startQuiz(User user, String topic);
 }

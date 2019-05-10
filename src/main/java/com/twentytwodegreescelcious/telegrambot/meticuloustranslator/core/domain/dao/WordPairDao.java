@@ -45,4 +45,14 @@ public interface WordPairDao extends JpaRepository<WordPair, Integer> {
      * @return java.util.List of word pair objects that correspond to the rows in the "WORD_PAIR" table.
      */
     List<WordPair> findByUser(User user);
+
+    /**
+     * Provides with a connection to the database.
+     * Implements a query execution that get all the wordpairs that belong to a user and correspond to a given topic.
+     *
+     * @param user an object representation of the foreign key. Must contain a defined chatId field.
+     * @param topic a string which specifies a topic to search for.
+     * @return
+     */
+    List<WordPair> findByUserAndTopicLikeIgnoreCase(User user, String topic);
 }

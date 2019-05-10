@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.util.Objects;
 
 /**
  * Created by twentytwodegreescelcious on 2/6/2019.
@@ -93,5 +94,23 @@ public class WordPair {
 
     public void setWordPairQuizInfo(WordPairQuizInfo wordPairQuizInfo) {
         this.wordPairQuizInfo = wordPairQuizInfo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WordPair wordPair = (WordPair) o;
+        return Objects.equals(id, wordPair.id) &&
+                Objects.equals(user, wordPair.user) &&
+                Objects.equals(word, wordPair.word) &&
+                Objects.equals(translation, wordPair.translation) &&
+                Objects.equals(topic, wordPair.topic) &&
+                Objects.equals(wordPairQuizInfo, wordPair.wordPairQuizInfo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user, word, translation, topic, wordPairQuizInfo);
     }
 }

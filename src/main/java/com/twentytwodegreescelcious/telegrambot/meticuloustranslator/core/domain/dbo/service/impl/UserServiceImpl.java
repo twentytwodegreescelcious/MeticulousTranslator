@@ -1,8 +1,11 @@
 package com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.impl;
 
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dao.UserDao;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dao.WordPairDao;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.User;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.entity.WordPair;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.UserService;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UserQuizService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.util.Language;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.util.LanguageNotFoundException;
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -27,10 +31,17 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private MessageSource messageSource;
 
-    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    @Autowired
+    private WordPairDao wordPairDao;
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserQuizService userQuizService;
+
+
+    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
@@ -107,14 +118,17 @@ public class UserServiceImpl implements UserService {
     public String newTopic(Integer chatId, String text) {
         User user = this.getUser(chatId);
         if (null == user) {
-            return messageSource.getMessage("userserviceimpl.newtopic.nolangset", null, new Locale("en"));
+            return messageSource.getMessage("userserviceimpl.newtopic.nolangset", null,
+                    new Locale("en"));
         }
         if (null != user.getCurrentTopic()) {
-            return messageSource.getMessage("userserviceimpl.newtopic.notclosed", new Object[]{user.getCurrentTopic()}, new Locale(user.getDefaultLanguage()));
+            return messageSource.getMessage("userserviceimpl.newtopic.notclosed",
+                    new Object[]{user.getCurrentTopic()}, new Locale(user.getDefaultLanguage()));
         }
         user.setCurrentTopic(text);
         this.editUser(user);
-        return messageSource.getMessage("userserviceimpl.newtopic.success", null, new Locale(user.getDefaultLanguage()));
+        return messageSource.getMessage("userserviceimpl.newtopic.success", null,
+                new Locale(user.getDefaultLanguage()));
 
     }
 
@@ -123,14 +137,23 @@ public class UserServiceImpl implements UserService {
     public String closeTopic(Integer chatId) {
         User user = this.getUser(chatId);
         if (null == user) {
-            return messageSource.getMessage("userserviceimpl.closetopic.nolangset", null, new Locale("en"));
+            return messageSource.getMessage("userserviceimpl.closetopic.nolangset", null,
+                    new Locale("en"));
         }
         if (null == user.getCurrentTopic()) {
-            return messageSource.getMessage("userserviceimpl.closetopic.notstarted", null, new Locale(user.getDefaultLanguage()));
+            return messageSource.getMessage("userserviceimpl.closetopic.notstarted", null,
+                    new Locale(user.getDefaultLanguage()));
         }
-        String ret = user.getCurrentTopic();
+        String returnMessage = user.getCurrentTopic();
         user.setCurrentTopic(null);
-        return messageSource.getMessage("userserviceimpl.closetopic.success", new Object[]{ret}, new Locale(user.getDefaultLanguage()));
+        return messageSource.getMessage("userserviceimpl.closetopic.success", new Object[]{returnMessage},
+                new Locale(user.getDefaultLanguage()));
 
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public String startQuiz(User user, String topic) {
+        return userQuizService.startQuiz(user.getId(), topic);
     }
 }

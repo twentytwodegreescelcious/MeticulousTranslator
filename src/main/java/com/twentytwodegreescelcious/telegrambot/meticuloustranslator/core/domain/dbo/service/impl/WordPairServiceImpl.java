@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -121,7 +122,7 @@ public class WordPairServiceImpl implements WordPairService {
                     Locale.ENGLISH);
         } else {
             r = "Showing word pairs for " + topic + " topic:\n";
-             sb = new StringBuilder(r);
+            sb = new StringBuilder(r);
             for (WordPair wp : wordPairs) {
                 sb.append(wp.getWord());
                 sb.append(" || ");
@@ -162,5 +163,31 @@ public class WordPairServiceImpl implements WordPairService {
         List<String> topicsList = new ArrayList<>();
         topicsList.addAll(topics);
         return topicsList;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<WordPair> getWordPairsForUserTopic(User user, String topic) {
+        if (null != user && this.getTopics(user).contains(topic.trim())) {
+            return wordPairDao.findByUserAndTopicLikeIgnoreCase(user, "%" + topic.trim() + "%");
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    public List<WordPair> getAnsweredWordPairsForUserTopic(User user, String topic) {
+        List<WordPair> wordPairs = new ArrayList<>();
+        for (WordPair wp : wordPairDao.findByUserAndTopicLikeIgnoreCase(user, topic)) {
+            WordPairQuizInfo wpqi = wp.getWordPairQuizInfo();
+            if (!wpqi.getInQuiz()) {
+                wordPairs.add(wp);
+            } else {
+                wpqi.setCurrent(false);
+                wpqi.setInQuiz(false);
+                wordPairQuizInfoService.updateWordPairQuizInfo(wpqi);
+            }
+        }
+        return wordPairs;
     }
 }

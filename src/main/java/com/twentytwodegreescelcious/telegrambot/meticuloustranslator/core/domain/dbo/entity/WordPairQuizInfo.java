@@ -25,6 +25,10 @@ public class WordPairQuizInfo {
     private Boolean wasCorrect = true;
     @Column(name = "times_incorrect")
     private Integer timesIncorrect = 0;
+    @Column(name = "in_quiz")
+    private Boolean inQuiz = false;
+    @Column(name="is_current")
+    private Boolean isCurrent = false;
 
     public WordPairQuizInfo() {
     }
@@ -59,5 +63,21 @@ public class WordPairQuizInfo {
 
     public void setTimesIncorrect(Integer timesIncorrect) {
         this.timesIncorrect = timesIncorrect;
+    }
+
+    public Boolean getInQuiz() {
+        return inQuiz;
+    }
+
+    public void setInQuiz(Boolean inQuiz) {
+        this.inQuiz = inQuiz;
+    }
+
+    public Boolean getCurrent() {
+        return isCurrent;
+    }
+
+    public void setCurrent(Boolean current) {
+        isCurrent = current;
     }
 }

@@ -104,4 +104,20 @@ public interface WordPairService {
      * @return A java.util.List of topics (represented as java.lang.String) which were created by the specified user.
      */
     List<String> getTopics(Integer chatId);
+
+    /**
+     * Gets all the word pairs that belong to a user's topic.
+     * @param user Object representation of a USERS table in database.
+     * @param topic Topic name.
+     * @return A List of WordPair object that corresponds to user and topic.
+     */
+    List<WordPair> getWordPairsForUserTopic(User user, String topic);
+
+    /**
+     * Gets all the word pairs that belong to a user's topic but haven't been answered in the latest quiz.
+     * @param user  Object representation of a USERS table in database.
+     * @param topic Topic name.
+     * @return A List of WordPair object that corresponds to user and topic and weren't answered in the latest quiz.
+     */
+    List<WordPair> getAnsweredWordPairsForUserTopic(User user, String topic);
 }

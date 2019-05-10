@@ -48,4 +48,22 @@ public interface WordPairQuizInfoService {
      * @param wordPairQuizInfo an object representation of the WORDPAIR_QUIZ_INFO table row that is to be deleted.
      */
     void deleteWordPairQuizInfo(WordPairQuizInfo wordPairQuizInfo);
+
+    /**
+     * Marks as a wordpair that is in a quiz
+     *
+     * @param wordPairQuizInfo an object representation of the WORDPAIR_QUIZ_INFO that has to be added to quiz
+     * @return an object representation of WORDPAIR_QUIZ_INFO row that has been added to a quiz or <b>null</b> if no
+     *          such WORDPAIR_QUIZ_INFO has been found
+     */
+    WordPairQuizInfo addToQuiz(WordPairQuizInfo wordPairQuizInfo);
+
+    /**
+     * Marks as a wordpair that is in a quiz
+     *
+     * @param id an integer identifier of the WORDPAIR_QUIZ_INFO that has to be added to quiz
+     * @return an object representation of WORDPAIR_QUIZ_INFO row that has been added to a quiz or <b>null</b> if no
+     *      *          such WORDPAIR_QUIZ_INFO has been found
+     */
+    WordPairQuizInfo addToQuiz(Integer id);
 }
