@@ -168,17 +168,23 @@ public class WordPairServiceImpl implements WordPairService {
     @Override
     @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
     public List<WordPair> getWordPairsForUserTopic(User user, String topic) {
-        if (null != user && this.getTopics(user).contains(topic.trim())) {
-            return wordPairDao.findByUserAndTopicLikeIgnoreCase(user, "%" + topic.trim() + "%");
+        if (null != user) {
+            if (null != topic && !topic.isEmpty()) {
+                return wordPairDao.findByUserAndTopicLikeIgnoreCase(user, "%" + topic.trim() + "%");
+            }
+            String currentTopic = user.getCurrentTopic();
+            if (null != currentTopic && !currentTopic.isEmpty()) {
+                return wordPairDao.findByUserAndTopicLikeIgnoreCase(user, "%" + currentTopic.trim() + "%");
+            }
         }
         return Collections.emptyList();
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = true)
+    @Transactional(propagation = Propagation.REQUIRED)
     public List<WordPair> getAnsweredWordPairsForUserTopic(User user, String topic) {
-        List<WordPair> wordPairs = new ArrayList<>();
-        for (WordPair wp : wordPairDao.findByUserAndTopicLikeIgnoreCase(user, topic)) {
+        List<WordPair> wordPairs = wordPairDao.findByUserAndTopicLikeIgnoreCase(user, topic);
+        for (WordPair wp : wordPairs) {
             WordPairQuizInfo wpqi = wp.getWordPairQuizInfo();
             if (!wpqi.getInQuiz()) {
                 wordPairs.add(wp);

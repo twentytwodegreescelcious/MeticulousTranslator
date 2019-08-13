@@ -12,7 +12,10 @@ public enum Command {
     newtopic("/newtopic"),
     closetopic("/closetopic"),
     addword("/addword"),
-    getwordsfortopic("/getwordsfortopic");
+    getwordsfortopic("/getwordsfortopic"),
+    startquiz("/startquiz"),
+    next("/next"),
+    finishquiz("/stop");
 
     public String value;
 

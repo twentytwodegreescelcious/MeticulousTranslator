@@ -7,8 +7,10 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.UserService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.WordPairService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.CommandService;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.MessageWithoutCommandProcessingService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.TranslationService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UpdateService;
+import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UserQuizService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +62,12 @@ public class MeticulousTranslator implements CommandLineRunner {
     @Autowired
     private TranslationService translationService;
 
+    @Autowired
+    private UserQuizService userQuizService;
+
+    @Autowired
+    private MessageWithoutCommandProcessingService messageWithoutCommandProcessingService;
+
     @SuppressWarnings("squid:S2189")
     @Override
     public void run(String... strings) {
@@ -103,13 +111,17 @@ public class MeticulousTranslator implements CommandLineRunner {
         if (text.startsWith(greet.value)) {
             commandService.executeCommand(chatId, messageSource.getMessage("command.greetings",
                     new Object[]{username}, new Locale(userService.getUser(chatId).getDefaultLanguage())));
+        } else if (text.startsWith(startquiz.value)) {
+            commandService.executeCommand(chatId, userQuizService.startQuiz(chatId,
+                    text.substring(startquiz.value.length())));
         } else if (text.startsWith(start.value)) {
             commandService.executeCommand(chatId, messageSource.getMessage("command.start",
                     null, new Locale(defaultLanguage)));
         } else if (text.startsWith(translate.value)) {
             commandService.executeCommand(chatId, translationService.translate(text, defaultLanguage.substring(0, 2)));
         } else if (text.startsWith(setlanguage.value)) {
-            commandService.executeCommand(chatId, userService.setLanguage(chatId, text.substring(12)));
+            commandService.executeCommand(chatId, userService.setLanguage(chatId,
+                    text.substring(setlanguage.value.length())));
         } else if (text.startsWith(availablelanguages.value)) {
             commandService.executeCommand(chatId, availableLanguages);
         } else if (text.startsWith(newtopic.value)) {
@@ -121,7 +133,16 @@ public class MeticulousTranslator implements CommandLineRunner {
             commandService.executeCommand(chatId, wordPairService.createWordPair(chatId,
                     text.substring(addword.value.length())));
         } else if (text.startsWith(getwordsfortopic.value)) {
-            commandService.executeCommand(chatId, wordPairService.getWordPairs(text.substring(getwordsfortopic.value.length()).trim()));
+            commandService.executeCommand(chatId, wordPairService
+                    .getWordPairs(text.substring(getwordsfortopic.value.length()).trim()));
+        } else if (text.startsWith(next.value)) {
+             commandService.executeCommand(chatId, userQuizService.next(userService.getUser(chatId),
+                     text.substring(next.value.length()), true));
+        } else if (text.startsWith(finishquiz.value)) {
+            commandService.executeCommand(chatId, userQuizService
+                    .finishQuiz(userService.getUser(chatId), true));
+        } else {
+            commandService.executeCommand(chatId, messageWithoutCommandProcessingService.process(chatId, text));
         }
     }
 

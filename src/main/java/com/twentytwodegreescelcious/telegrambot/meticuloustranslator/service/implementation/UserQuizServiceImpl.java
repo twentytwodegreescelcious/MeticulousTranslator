@@ -8,6 +8,8 @@ import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.WordPairQuizInfoService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.core.domain.dbo.service.WordPairService;
 import com.twentytwodegreescelcious.telegrambot.meticuloustranslator.service.UserQuizService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -41,14 +43,32 @@ public class UserQuizServiceImpl implements UserQuizService {
     @Autowired
     private WordPairQuizInfoService wordPairQuizInfoService;
 
+    private Logger logger = LoggerFactory.getLogger(UserQuizServiceImpl.class);
+
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public String startQuiz(Integer id, String topic) {
+    public String  startQuiz(Integer id, String topic) {
         User user = userService.getUser(id);
         if (user != null) {
             if (user.isDictation()) {
                 return messageSource.getMessage("userserviceimpl.newquiz.alreadyinquiz",
-                        new Object[]{userService.getUser(user.getId())}, new Locale(user.getDefaultLanguage()));
+                        new Object[]{user.getDictationTopic()}, new Locale(user.getDefaultLanguage()));
+            }
+            else if (topic == null || topic.isEmpty()) {
+                topic = user.getCurrentTopic();
+                logger.debug("User didn't specify a topic for a quiz. Starting quiz for User.currentTopic");
+                user.setDictation(true);
+                user.setDictationTopic(topic);
+                userService.editUser(user);
+
+                return messageSource.getMessage("userquizserviceimpl.newquiz.defaulttopic", new Object[]{topic},
+                        new Locale(user.getDefaultLanguage()))
+                        + "\n"
+                        + this.next(user, null, false);
+            }
+            else if (!wordPairService.getTopics(user).contains(topic.trim()) && !user.getCurrentTopic().equals(topic)) {
+                return messageSource.getMessage("userserviceimpl.newquiz.nosuchtopic",
+                        new Object[]{topic}, new Locale(user.getDefaultLanguage()));
             }
             List<WordPair> wordPairs = wordPairDao.findByTopicIgnoreCase(topic);
             if (null != wordPairs &&
@@ -69,30 +89,35 @@ public class UserQuizServiceImpl implements UserQuizService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public String next(User user, String previousAnswer) {
+    public String next(User user, String previousAnswer, boolean userInitiated) {
+        if (userInitiated) {
+            logger.error("This /next action was user initiated.");
+        }
         List<WordPair> wordPairs = wordPairService.getWordPairsForUserTopic(user, user.getDictationTopic());
         wordPairs = filterInQuiz(wordPairs);
-        WordPair current;
-        for (WordPair wp : wordPairs) {
-            if (wp.getWordPairQuizInfo().getCurrent()) {
-                validatePreviousAnswer(previousAnswer, wp, wp.getWord().equals(previousAnswer.trim()));
-                break;
+        WordPair newCurrent;
+        if (null != previousAnswer) {
+            for (WordPair wp : wordPairs) {
+                if (wp.getWordPairQuizInfo().getCurrent()) {
+                    validatePreviousAnswer(previousAnswer, wp, wp.getWord().equals(previousAnswer.trim()));
+                    break;
+                }
             }
         }
         if (!wordPairs.isEmpty()) {
-            current = filterInQuiz(wordPairs).get(0);
-            current.getWordPairQuizInfo().setCurrent(true);
-            return "next, lol";
-//            return messageSource.getMessage("userquizserviceimpl.next.sendnext", //TODO MESSAGESOURCE
-//                    new Object[]{current.getTranslation()}, new Locale(user.getDefaultLanguage()));
+            newCurrent = filterInQuiz(wordPairs).get(0);
+            newCurrent.getWordPairQuizInfo().setCurrent(true);
+            return messageSource.getMessage("userquizserviceimpl.next.sendnext",
+                    new Object[]{newCurrent.getTranslation()}, new Locale(user.getDefaultLanguage()));
         } else {
             return finishQuiz(user,false);
         }
 
     }
 
+    @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    private void validatePreviousAnswer(String previousAnswer, WordPair wp, boolean wasCorrect) {
+    public void validatePreviousAnswer(String previousAnswer, WordPair wp, boolean wasCorrect) {
         WordPairQuizInfo previous;
         if (wp.getWord().equals(previousAnswer.trim())) {
             previous = wp.getWordPairQuizInfo();
@@ -103,7 +128,6 @@ public class UserQuizServiceImpl implements UserQuizService {
             wp.setWordPairQuizInfo(previous);
             wordPairService.editWordPair(wp);
             wordPairQuizInfoService.updateWordPairQuizInfo(previous);
-            return;
         }
     }
 
@@ -124,7 +148,8 @@ public class UserQuizServiceImpl implements UserQuizService {
                 correct++;
             }
         }
-        return "Your result is " + correct + "out of " + wordPairs.size(); //TODO MESSAGESOURCE
+        return messageSource.getMessage("userquizserviceimpl.next.preparequizresult",
+                new Object[]{correct, wordPairs.size()}, new Locale(user.getDefaultLanguage()));
     }
 
     @Override
@@ -137,6 +162,8 @@ public class UserQuizServiceImpl implements UserQuizService {
             wordPairs = wordPairService.getWordPairsForUserTopic(user, user.getDictationTopic());
         }
         user.setDictationTopic(null);
+        user.setDictation(false);
+        userService.editUser(user);
         return prepareQuizResult(user, wordPairs);
     }
 }

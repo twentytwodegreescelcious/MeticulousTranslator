@@ -23,11 +23,11 @@ public class MessageWithoutCommandProcessingServiceImpl implements MessageWithou
     public String process(Integer id, String message) {
         User user = userService.getUser(id);
         if (user != null) {
-            if (!user.getCurrentTopic().isEmpty() && !user.getDictationTopic().isEmpty()) {
-                return userQuizService.next(user, message);
+            if (user.isDictation() && user.getDictationTopic() != null) {
+                return userQuizService.next(user, message, false);
             }
             //TODO Return help otherwise
         }
-        return null;
+        return "HELP TO BE RETURNED";
     }
 }
